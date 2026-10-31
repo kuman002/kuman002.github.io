@@ -1649,10 +1649,10 @@
       clip-path:none !important;
       filter:none !important;
       transition:opacity 560ms cubic-bezier(.22,.68,0,1),transform 680ms cubic-bezier(.22,.68,0,1) !important;
-      will-change:opacity,transform;
     }
-    .reveal:not(.on) { opacity:0; transform:translate3d(0,20px,0) scale(.995); }
-    .reveal.on { opacity:1; transform:translate3d(0,0,0) scale(1); }
+    .reveal:not(.on) { opacity:0; transform:translate3d(0,20px,0) scale(.995); will-change:opacity,transform; }
+    .reveal.on { opacity:1; transform:translate3d(0,0,0) scale(1); will-change:auto; }
+    .hero-copy { animation:none !important; }
     .hero-copy { filter:none !important; }
     .hero-copy h1,.hero-copy .hero-kicker,.hero-copy .hero-role,.hero-copy .hero-intro,
     .hero-copy .hero-specialties,.hero-copy .hero-cta,.hero-copy .hero-stack { filter:none !important; }
@@ -2754,11 +2754,7 @@
             });
             updateTopicVisibility();
           };
-          if (!prefersReducedMotion && document.startViewTransition) {
-            document.startViewTransition(applyFilter);
-          } else {
-            applyFilter();
-          }
+          applyFilter();
         });
       }
       updateTopicVisibility();

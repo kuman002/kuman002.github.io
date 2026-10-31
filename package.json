@@ -1,0 +1,18 @@
+{
+  "name": "kumaresan-portfolio",
+  "version": "2.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "astro dev",
+    "build": "node scripts/prepare-assets.mjs && astro build",
+    "preview": "astro preview",
+    "check": "astro check"
+  },
+  "dependencies": {
+    "@astrojs/check": "^0.9.4",
+    "astro": "^5.7.0",
+    "gsap": "^3.14.2",
+    "typescript": "^5.8.3"
+  }
+}

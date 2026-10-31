@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 
 // ----------------------------------------------------
 // Neural Network Synapse Node Definition
@@ -18,20 +18,51 @@ interface NeuralNode {
 }
 
 // ----------------------------------------------------
-// Architecture Pipeline Module Definition
+// Architecture Pipeline Module & Telemetry Definition
 // ----------------------------------------------------
+export interface TelemetryData {
+  id: number;
+  stageNumber: string;
+  tag: string;
+  sub: string;
+  protocol: string;
+  accentColor: string;
+  ioSample: {
+    input: string;
+    process: string;
+    output: string;
+  };
+  metrics: {
+    latency: string;
+    throughput: string;
+    security: string;
+  };
+}
+
 interface PipelineModule {
   id: number;
   align: "left" | "right";
   initialY: number;
   width: number;
   height: number;
+  stageNumber: string;
   tag: string;
   sub: string;
   protocol: string;
   accentColor: string;
   activeGlow: number; // Duration countdown for processing flash
   statusText: string;
+  hoverAlpha: number; // Smooth fade-in for inspection hover box
+  ioSample: {
+    input: string;
+    process: string;
+    output: string;
+  };
+  metrics: {
+    latency: string;
+    throughput: string;
+    security: string;
+  };
 }
 
 interface SignalPacket {
@@ -50,87 +81,175 @@ const PIPELINE_CONFIG = [
     initialY: 160,
     width: 155,
     height: 74,
+    stageNumber: "01 / 08",
     tag: "API_GATEWAY",
-    sub: "REST // HTTPS",
+    sub: "EDGE // HTTP/3",
     protocol: "INGRESS",
     accentColor: "#38bdf8",
+    ioSample: {
+      input: "POST /api/v1/orders { userId, items, authNonce }",
+      process: "TLS 1.3 audit · Rate-limiting (100 req/min) · Schema parse",
+      output: "Sanitized request envelope -> Route to Cognito Auth (200 OK)",
+    },
+    metrics: {
+      latency: "0.6ms",
+      throughput: "35k req/s",
+      security: "AWS WAF · DDoS Shield",
+    },
   },
   {
     id: 1,
     align: "right" as const,
-    initialY: 560,
+    initialY: 540,
     width: 155,
     height: 74,
+    stageNumber: "02 / 08",
     tag: "AUTH_COGNITO",
-    sub: "JWT VERIFIED",
+    sub: "OIDC // JWT_RBAC",
     protocol: "SECURITY",
     accentColor: "#818cf8",
+    ioSample: {
+      input: "Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9... (JWT)",
+      process: "JWKS RSA-256 signature verify · Token expiry & RBAC check",
+      output: "ClaimsPrincipal { uid: 'usr_742', role: 'admin', scope: ['write'] }",
+    },
+    metrics: {
+      latency: "1.1ms",
+      throughput: "22k auth/s",
+      security: "OAuth 2.0 · PKCE Flow",
+    },
   },
   {
     id: 2,
     align: "left" as const,
-    initialY: 960,
+    initialY: 920,
     width: 155,
     height: 74,
-    tag: "LAMBDA_POOL",
-    sub: "V8 NODE.JS@22",
+    stageNumber: "03 / 08",
+    tag: "LAMBDA_HANDLER",
+    sub: "NODE.JS 22 // ARM64",
     protocol: "COMPUTE",
     accentColor: "#38bdf8",
+    ioSample: {
+      input: "APIGatewayProxyEvent { body, headers, claimsPrincipal }",
+      process: "Domain business logic · Input sanitization · Entity validation",
+      output: "Validated domain payload -> Cache check & DB transaction",
+    },
+    metrics: {
+      latency: "3.8ms",
+      throughput: "12k exec/s",
+      security: "Zero-Vulnerability MicroVM",
+    },
   },
   {
     id: 3,
     align: "right" as const,
-    initialY: 1360,
+    initialY: 1300,
     width: 155,
     height: 74,
-    tag: "POSTGRES_RDS",
-    sub: "pgvector // CDC",
-    protocol: "DATABASE",
-    accentColor: "#38bdf8",
+    stageNumber: "04 / 08",
+    tag: "REDIS_CACHE",
+    sub: "IN-MEMORY // CLUSTER",
+    protocol: "CACHE_LOCK",
+    accentColor: "#f43f5e",
+    ioSample: {
+      input: "GET user:session:usr_742 & SETNX order:lock:ord_581",
+      process: "Atomic in-memory lookup · Sub-millisecond hit · Distributed lock",
+      output: "CacheHit { TTL: 3600s, lockAcquired: true } -> DB dispatch",
+    },
+    metrics: {
+      latency: "0.3ms",
+      throughput: "60k ops/s",
+      security: "TLS Encryption In-Transit",
+    },
   },
   {
     id: 4,
     align: "left" as const,
-    initialY: 1760,
+    initialY: 1680,
     width: 155,
     height: 74,
-    tag: "REDIS_BULLMQ",
-    sub: "LOW_LATENCY",
-    protocol: "CACHE_QUEUE",
-    accentColor: "#f43f5e",
+    stageNumber: "05 / 08",
+    tag: "POSTGRES_RDS",
+    sub: "ACID // READ_REPLICA",
+    protocol: "DATABASE",
+    accentColor: "#38bdf8",
+    ioSample: {
+      input: "BEGIN; INSERT INTO orders VALUES (...) RETURNING id; COMMIT;",
+      process: "Connection pooler dispatch · Query planner exec · WAL commit",
+      output: "OrderEntity { id: 'ord_581', status: 'CONFIRMED', total: $120.00 }",
+    },
+    metrics: {
+      latency: "4.5ms",
+      throughput: "6.5k qps",
+      security: "Multi-AZ · VPC Peering",
+    },
   },
   {
     id: 5,
     align: "right" as const,
-    initialY: 2160,
+    initialY: 2060,
     width: 155,
     height: 74,
-    tag: "ZERO_TRUST_KMS",
-    sub: "AES-256-GCM",
-    protocol: "ENCRYPTION",
-    accentColor: "#38bdf8",
+    stageNumber: "06 / 08",
+    tag: "SQS_EVENT_QUEUE",
+    sub: "FIFO // ASYNC_BUS",
+    protocol: "QUEUE_EVENT",
+    accentColor: "#f59e0b",
+    ioSample: {
+      input: "EventPayload { type: 'ORDER_CREATED', orderId: 'ord_581' }",
+      process: "At-least-once FIFO queueing · De-duplication · DLQ retry policy",
+      output: "MessageId: msg_41029 -> Dispatched to background notification worker",
+    },
+    metrics: {
+      latency: "0.9ms",
+      throughput: "18k msg/s",
+      security: "SSE-KMS Encryption At-Rest",
+    },
   },
   {
     id: 6,
     align: "left" as const,
-    initialY: 2560,
+    initialY: 2440,
     width: 160,
     height: 74,
-    tag: "LANGGRAPH_RAG",
-    sub: "AGENTIC_SYNTHESIS",
-    protocol: "AI_RAG_FLOW",
+    stageNumber: "07 / 08",
+    tag: "S3_KMS_VAULT",
+    sub: "AES-256 // ENCRYPTED",
+    protocol: "STORAGE_KMS",
     accentColor: "#a855f7",
+    ioSample: {
+      input: "Generated invoice receipt PDF + Audit log metadata blob",
+      process: "Envelope encryption via AWS KMS HSM (AES-256-GCM) · Multi-part PUT",
+      output: "Encrypted bucket object: s3://receipts-vault/2026/ord_581.pdf",
+    },
+    metrics: {
+      latency: "8.2ms",
+      throughput: "3.5k put/s",
+      security: "FIPS 140-2 L3 · IAM Roles",
+    },
   },
   {
     id: 7,
     align: "right" as const,
-    initialY: 2960,
+    initialY: 2820,
     width: 160,
     height: 74,
-    tag: "EGRESS_OUTPUT",
-    sub: "STREAM_DONE",
-    protocol: "OUTPUT_200",
+    stageNumber: "08 / 08",
+    tag: "EGRESS_RESPONSE",
+    sub: "HTTP/2 200 // JSON",
+    protocol: "CLIENT_RESP",
     accentColor: "#818cf8",
+    ioSample: {
+      input: "Finalized response { code: 200, order: 'ord_581', status: 'SUCCESS' }",
+      process: "Brotli compression · Response serialization · CloudWatch metrics emit",
+      output: "HTTP/2 200 OK (Round-trip completed, total latency: 28ms)",
+    },
+    metrics: {
+      latency: "0.7ms",
+      throughput: "28k res/s",
+      security: "Strict-Transport-Security",
+    },
   },
 ];
 
@@ -157,6 +276,12 @@ function getCubicBezierPoint(
 
 export const NetworkBackground: React.FC = () => {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
+  const overlayRef = useRef<HTMLDivElement | null>(null);
+  const [activeTelemetry, setActiveTelemetry] = useState<TelemetryData | null>(null);
+
+  const activeTelemetryRef = useRef<TelemetryData | null>(null);
+  const isOverOverlayRef = useRef<boolean>(false);
+  const dismissTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -181,7 +306,7 @@ export const NetworkBackground: React.FC = () => {
     }
     window.addEventListener("scroll", handleScroll, { passive: true });
 
-    // Subtle mouse parallax
+    // Subtle mouse parallax & position tracking
     const mouse = {
       x: -1000,
       y: -1000,
@@ -206,8 +331,16 @@ export const NetworkBackground: React.FC = () => {
       mouse.targetY = 0;
     }
 
+    function handleTouch(e: TouchEvent) {
+      if (e.touches && e.touches.length > 0) {
+        mouse.x = e.touches[0].clientX;
+        mouse.y = e.touches[0].clientY;
+      }
+    }
+
     window.addEventListener("mousemove", handleMouseMove, { passive: true });
     window.addEventListener("mouseleave", handleMouseLeave, { passive: true });
+    window.addEventListener("touchstart", handleTouch, { passive: true });
 
     // Neural Nodes state
     const neuralNodes: NeuralNode[] = [];
@@ -225,8 +358,8 @@ export const NetworkBackground: React.FC = () => {
 
       ctx.scale(dpr, dpr);
 
-      // Re-populate neural nodes with depth factors
-      const targetCount = width < 768 ? 24 : 42;
+      // Re-populate neural nodes with lighter depth factors (lower density)
+      const targetCount = width < 768 ? 16 : 24;
       neuralNodes.length = 0;
 
       for (let i = 0; i < targetCount; i++) {
@@ -239,11 +372,11 @@ export const NetworkBackground: React.FC = () => {
           baseY: initialY,
           y: initialY,
           z,
-          vx: (Math.random() - 0.5) * (prefersReducedMotion ? 0 : 0.25),
-          vy: (Math.random() - 0.5) * (prefersReducedMotion ? 0 : 0.18),
-          radius: isNeuronCore ? 2.5 * z : (1.3 + Math.random() * 0.6) * z,
-          baseAlpha: isNeuronCore ? 0.6 : 0.18 + Math.random() * 0.2,
-          pulseSpeed: 1.1 + Math.random() * 1.4,
+          vx: (Math.random() - 0.5) * (prefersReducedMotion ? 0 : 0.2),
+          vy: (Math.random() - 0.5) * (prefersReducedMotion ? 0 : 0.15),
+          radius: isNeuronCore ? 2.0 * z : (1.1 + Math.random() * 0.5) * z,
+          baseAlpha: isNeuronCore ? 0.45 : 0.12 + Math.random() * 0.15,
+          pulseSpeed: 1.0 + Math.random() * 1.2,
           pulsePhase: Math.random() * Math.PI * 2,
           isNeuronCore,
         });
@@ -258,21 +391,8 @@ export const NetworkBackground: React.FC = () => {
       ...m,
       activeGlow: 0,
       statusText: m.protocol,
+      hoverAlpha: 0,
     }));
-
-    // Signals lifecycle: Process moves ONLY when scrolling!
-    // When the user stops scrolling, the process packets freeze in place on the line or inside a module
-    const signals: SignalPacket[] = [
-      // Forward Request Signals (distributed across stages)
-      { id: 1, stageIndex: 0, direction: 1, progress: 0.35, color: "#38bdf8", label: "REQ: INGRESS" },
-      { id: 2, stageIndex: 2, direction: 1, progress: 0.65, color: "#818cf8", label: "REQ: SQL_QUERY" },
-      { id: 3, stageIndex: 4, direction: 1, progress: 0.40, color: "#38bdf8", label: "REQ: VECTOR_RAG" },
-
-      // Return Response Signals (Theme Soft Indigo #818cf8)
-      { id: 4, stageIndex: 6, direction: -1, progress: 0.50, color: "#818cf8", label: "RES: RAG_STREAM" },
-      { id: 5, stageIndex: 3, direction: -1, progress: 0.75, color: "#818cf8", label: "RES: 200 OK" },
-      { id: 6, stageIndex: 1, direction: -1, progress: 0.25, color: "#818cf8", label: "RES: DISPATCHED" },
-    ];
 
     let lastTime = performance.now();
     let prevScrollCurrent = window.scrollY;
@@ -345,8 +465,8 @@ export const NetworkBackground: React.FC = () => {
         node.y = rawY;
       }
 
-      // Draw Synapses between nearby nodes
-      const synapseDistance = 125;
+      // Draw Synapses between nearby nodes (light airy web)
+      const synapseDistance = 90;
       for (let i = 0; i < neuralNodes.length; i++) {
         const n1 = neuralNodes[i];
         for (let j = i + 1; j < neuralNodes.length; j++) {
@@ -356,7 +476,7 @@ export const NetworkBackground: React.FC = () => {
           const dist = Math.hypot(dx, dy);
 
           if (dist < synapseDistance) {
-            const alpha = (1 - dist / synapseDistance) * 0.13 * Math.min(n1.z, n2.z);
+            const alpha = (1 - dist / synapseDistance) * 0.08 * Math.min(n1.z, n2.z);
             ctx.strokeStyle = `rgba(56, 189, 248, ${alpha})`;
             ctx.beginPath();
             ctx.moveTo(n1.x, n1.y);
@@ -429,9 +549,9 @@ export const NetworkBackground: React.FC = () => {
       const maxScroll = Math.max(1, docHeight - height);
       const scrollFraction = Math.min(1, Math.max(0, scrollCurrent / maxScroll));
 
-      // At bottom / Get in Touch (scrollFraction = 1): Module 7 (EGRESS_OUTPUT, 2960) sits at height * 0.45
+      // At bottom / Get in Touch (scrollFraction = 1): Module 7 (EGRESS_OUTPUT, 2820) sits at height * 0.45
       // Perfectly centered alongside the "Get in Touch" card instead of crammed below it!
-      const targetDisplacement = Math.max(1200, 2960 - height * 0.45);
+      const targetDisplacement = Math.max(1200, 2820 - height * 0.45);
       const scrollDisplacement = scrollFraction * targetDisplacement;
 
       const renderedModules: ModuleRenderData[] = modules.map((m) => {
@@ -480,29 +600,29 @@ export const NetworkBackground: React.FC = () => {
 
         const midY = (from.cy + to.cy) * 0.5;
 
-        // Rail 1: Forward Request Conduit (Offset -6px)
+        // Rail 1: Forward Request Conduit (Offset -3.5px)
         const reqP0x = from.cx;
-        const reqP0y = from.cy - 6;
+        const reqP0y = from.cy - 3.5;
         const reqP1x = from.cx;
-        const reqP1y = midY - 6;
+        const reqP1y = midY - 3.5;
         const reqP2x = to.cx;
-        const reqP2y = midY - 6;
+        const reqP2y = midY - 3.5;
         const reqP3x = to.cx;
-        const reqP3y = to.cy - 6;
+        const reqP3y = to.cy - 3.5;
 
-        // Rail 2: Return Response Conduit (Offset +6px) - HIGH VISIBILITY EMERALD
+        // Rail 2: Return Response Conduit (Offset +3.5px)
         const resP0x = to.cx;
-        const resP0y = to.cy + 6;
+        const resP0y = to.cy + 3.5;
         const resP1x = to.cx;
-        const resP1y = midY + 6;
+        const resP1y = midY + 3.5;
         const resP2x = from.cx;
-        const resP2y = midY + 6;
+        const resP2y = midY + 3.5;
         const resP3x = from.cx;
-        const resP3y = from.cy + 6;
+        const resP3y = from.cy + 3.5;
 
-        // 1. Draw Request Conduit Track (Theme Sky Blue #38bdf8)
+        // 1. Draw Request Conduit Track (Theme Sky Blue #38bdf8 - sleek hairline)
         ctx.strokeStyle = "rgba(56, 189, 248, 0.12)";
-        ctx.lineWidth = 2.4;
+        ctx.lineWidth = 1;
         ctx.beginPath();
         ctx.moveTo(reqP0x, reqP0y);
         ctx.bezierCurveTo(reqP1x, reqP1y, reqP2x, reqP2y, reqP3x, reqP3y);
@@ -510,25 +630,17 @@ export const NetworkBackground: React.FC = () => {
 
         ctx.strokeStyle = "rgba(56, 189, 248, 0.45)";
         ctx.lineWidth = 1;
-        ctx.beginPath();
-        ctx.moveTo(reqP0x, reqP0y);
-        ctx.bezierCurveTo(reqP1x, reqP1y, reqP2x, reqP2y, reqP3x, reqP3y);
-        ctx.stroke();
-
-        ctx.strokeStyle = "#38bdf8";
-        ctx.lineWidth = 1.2;
-        ctx.setLineDash([4, 10]);
-        // Conduit energy dash moves ONLY with scrolling! Completely still when stopped.
-        ctx.lineDashOffset = -(scrollCurrent * 0.22);
+        ctx.setLineDash([3, 24]);
+        ctx.lineDashOffset = -(scrollCurrent * 0.2);
         ctx.beginPath();
         ctx.moveTo(reqP0x, reqP0y);
         ctx.bezierCurveTo(reqP1x, reqP1y, reqP2x, reqP2y, reqP3x, reqP3y);
         ctx.stroke();
         ctx.setLineDash([]);
 
-        // 2. Draw Response Conduit Track (Theme Soft Indigo #818cf8, matching theme)
+        // 2. Draw Response Conduit Track (Theme Soft Indigo #818cf8 - sleek hairline)
         ctx.strokeStyle = "rgba(129, 140, 248, 0.12)";
-        ctx.lineWidth = 2.4;
+        ctx.lineWidth = 1;
         ctx.beginPath();
         ctx.moveTo(resP0x, resP0y);
         ctx.bezierCurveTo(resP1x, resP1y, resP2x, resP2y, resP3x, resP3y);
@@ -536,244 +648,249 @@ export const NetworkBackground: React.FC = () => {
 
         ctx.strokeStyle = "rgba(129, 140, 248, 0.45)";
         ctx.lineWidth = 1;
-        ctx.beginPath();
-        ctx.moveTo(resP0x, resP0y);
-        ctx.bezierCurveTo(resP1x, resP1y, resP2x, resP2y, resP3x, resP3y);
-        ctx.stroke();
-
-        ctx.strokeStyle = "#818cf8";
-        ctx.lineWidth = 1.2;
-        ctx.setLineDash([4, 10]);
-        // Counter-directional response stream moves ONLY with scrolling!
-        ctx.lineDashOffset = (scrollCurrent * 0.22);
+        ctx.setLineDash([3, 24]);
+        ctx.lineDashOffset = (scrollCurrent * 0.2);
         ctx.beginPath();
         ctx.moveTo(resP0x, resP0y);
         ctx.bezierCurveTo(resP1x, resP1y, resP2x, resP2y, resP3x, resP3y);
         ctx.stroke();
         ctx.setLineDash([]);
 
-        // Elegant terminal junction pins at endpoints and curve midpoint
-        ctx.fillStyle = "rgba(56, 189, 248, 0.5)";
+        // Delicate terminal junction pins
+        ctx.fillStyle = "rgba(56, 189, 248, 0.35)";
         ctx.beginPath();
-        ctx.arc(reqP0x, reqP0y, 2, 0, Math.PI * 2);
-        ctx.arc(reqP3x, reqP3y, 2, 0, Math.PI * 2);
+        ctx.arc(reqP0x, reqP0y, 1.2, 0, Math.PI * 2);
+        ctx.arc(reqP3x, reqP3y, 1.2, 0, Math.PI * 2);
         ctx.fill();
 
-        ctx.fillStyle = "rgba(129, 140, 248, 0.5)";
+        ctx.fillStyle = "rgba(129, 140, 248, 0.35)";
         ctx.beginPath();
-        ctx.arc(resP0x, resP0y, 2, 0, Math.PI * 2);
-        ctx.arc(resP3x, resP3y, 2, 0, Math.PI * 2);
+        ctx.arc(resP0x, resP0y, 1.2, 0, Math.PI * 2);
+        ctx.arc(resP3x, resP3y, 1.2, 0, Math.PI * 2);
         ctx.fill();
       }
 
+      // Extended Top Ingress Line (feeding into API_GATEWAY)
+      const firstMod = renderedModules[0];
+      if (firstMod && (firstMod.isVisible || firstMod.y > -250)) {
+        const inStartX = firstMod.cx + 35;
+        const inStartY = firstMod.cy - 240;
+        const inEndX = firstMod.cx;
+        const inEndY = firstMod.cy - 3.5;
+
+        const inGrad = ctx.createLinearGradient(inStartX, inStartY, inEndX, inEndY);
+        inGrad.addColorStop(0, "rgba(56, 189, 248, 0)");
+        inGrad.addColorStop(1, "rgba(56, 189, 248, 0.35)");
+
+        ctx.strokeStyle = inGrad;
+        ctx.lineWidth = 1;
+        ctx.setLineDash([3, 24]);
+        ctx.lineDashOffset = -(scrollCurrent * 0.2);
+        ctx.beginPath();
+        ctx.moveTo(inStartX, inStartY);
+        ctx.bezierCurveTo(inStartX, inStartY + 80, inEndX, inEndY - 80, inEndX, inEndY);
+        ctx.stroke();
+        ctx.setLineDash([]);
+      }
+
+      // Extended Bottom Egress Line (flowing spaciously past EGRESS_OUTPUT)
+      const lastMod = renderedModules[renderedModules.length - 1];
+      if (lastMod && (lastMod.isVisible || lastMod.y < height + 250)) {
+        const egStartX = lastMod.cx;
+        const egStartY = lastMod.cy + 3.5;
+        const egEndX = lastMod.cx - 45;
+        const egEndY = lastMod.cy + 280;
+
+        const egGrad = ctx.createLinearGradient(egStartX, egStartY, egEndX, egEndY);
+        egGrad.addColorStop(0, "rgba(129, 140, 248, 0.45)");
+        egGrad.addColorStop(1, "rgba(129, 140, 248, 0)");
+
+        ctx.strokeStyle = egGrad;
+        ctx.lineWidth = 1;
+        ctx.setLineDash([3, 24]);
+        ctx.lineDashOffset = -(scrollCurrent * 0.2);
+        ctx.beginPath();
+        ctx.moveTo(egStartX, egStartY);
+        ctx.bezierCurveTo(egStartX, egStartY + 100, egEndX, egEndY - 100, egEndX, egEndY);
+        ctx.stroke();
+        ctx.setLineDash([]);
+      }
+
       // ========================================================
-      // 5. ANIMATE REQUEST & RESPONSE SIGNALS (MOVES ONLY WHILE SCROLLING!)
-      // Stopping scrolling means the process stops dead in its tracks:
-      // frozen either in the line or in the module!
+      // 5. ANIMATE REQUEST & RESPONSE SIGNALS (TIED TO USER SCROLL)
+      // The request directly follows user scroll and stays visible in the viewport
+      // all the way from API_GATEWAY at top to EGRESS_OUTPUT at the end!
       // ========================================================
       const reqLabels = [
-        "REQ: INGRESS",
-        "REQ: AUTH_JWT",
-        "REQ: V8_EXEC",
-        "REQ: SQL_QUERY",
-        "REQ: BULLMQ_POP",
-        "REQ: KMS_DECRYPT",
-        "REQ: RAG_PROMPT",
+        "REQ: INGRESS // TLS 1.3",
+        "REQ: AUTH_VERIFY // JWT",
+        "REQ: LAMBDA_EXEC // V8",
+        "REQ: CACHE_LOOKUP // REDIS",
+        "REQ: SQL_TX // POSTGRES",
+        "REQ: ASYNC_DISPATCH // SQS",
+        "REQ: KMS_ENCRYPT // S3",
       ];
 
       const resLabels = [
-        "RES: 200 OK",
-        "RES: TOKEN_VALID",
-        "RES: COMPUTE_200",
-        "RES: CDC_ROW",
-        "RES: CACHE_SYNC",
-        "RES: CIPHER_OK",
-        "RES: RAG_STREAM",
+        "RES: 200 OK // SUCCESS",
+        "RES: TOKEN_VALID // CLAIMS",
+        "RES: COMPUTE_200 // NORMALIZED",
+        "RES: CACHE_HIT // LOCK_OK",
+        "RES: DB_COMMITTED // ACID",
+        "RES: SQS_ACK // ENQUEUED",
+        "RES: S3_OBJECT_SAVED",
       ];
 
-      // Motion step: proportional ONLY to user scroll!
-      // If user stops scrolling (Math.abs(smoothDelta) <= 0.005), step is 0 -> process STOPS!
-      const scrollStep = Math.abs(smoothDelta) > 0.005 ? smoothDelta * 0.0016 : 0;
+      const totalStages = renderedModules.length - 1; // 7 stages across 8 modules
+      // Map scroll progress (0.0 to 1.0) directly across the 7 stages (0 to 6.999)
+      const globalProgress = Math.min(totalStages - 0.001, Math.max(0, scrollFraction * totalStages));
 
-      if (scrollStep !== 0) {
-        signals.forEach((sig) => {
-          if (sig.direction === 1) {
-            // Forward request moves forward on scroll down, backward on scroll up
-            sig.progress += scrollStep;
-
-            if (sig.progress >= 1) {
-              sig.progress -= 1;
-              sig.stageIndex++;
-
-              if (sig.stageIndex >= renderedModules.length - 1) {
-                sig.direction = -1;
-                sig.stageIndex = renderedModules.length - 2;
-                sig.color = "#818cf8";
-                sig.label = resLabels[sig.stageIndex];
-              } else {
-                sig.color = "#38bdf8";
-                sig.label = reqLabels[sig.stageIndex];
-              }
-
-              const dest = renderedModules[sig.stageIndex];
-              if (dest) {
-                dest.m.activeGlow = 0.85;
-                dest.m.statusText = "PROCESSING...";
-              }
-            } else if (sig.progress < 0) {
-              sig.progress += 1;
-              sig.stageIndex--;
-
-              if (sig.stageIndex < 0) {
-                sig.stageIndex = 0;
-                sig.progress = 0;
-              } else {
-                sig.label = reqLabels[sig.stageIndex];
-              }
-            }
+      // Dynamic Module Proximity: Illuminate modules as the request passes through them
+      renderedModules.forEach((rm, idx) => {
+        const dist = Math.abs(globalProgress - idx);
+        if (dist < 0.45) {
+          const glowIntensity = 1 - dist / 0.45;
+          rm.m.activeGlow = glowIntensity * 0.9;
+          if (idx === totalStages) {
+            rm.m.statusText = "EGRESS_DONE 200";
+          } else if (idx === 0) {
+            rm.m.statusText = "INGRESS_ACTIVE";
           } else {
-            // Return response moves forward on scroll down, backward on scroll up
-            sig.progress += scrollStep;
-
-            if (sig.progress >= 1) {
-              sig.progress -= 1;
-              sig.stageIndex--;
-
-              if (sig.stageIndex < 0) {
-                sig.direction = 1;
-                sig.stageIndex = 0;
-                sig.color = "#38bdf8";
-                sig.label = reqLabels[0];
-              } else {
-                sig.color = "#818cf8";
-                sig.label = resLabels[sig.stageIndex];
-              }
-
-              const dest = renderedModules[sig.stageIndex];
-              if (dest) {
-                dest.m.activeGlow = 0.85;
-                dest.m.statusText = sig.stageIndex === 0 ? "DISPATCHED 200 OK" : "RELAYING 200...";
-              }
-            } else if (sig.progress < 0) {
-              sig.progress += 1;
-              sig.stageIndex++;
-
-              if (sig.stageIndex >= renderedModules.length - 1) {
-                sig.stageIndex = renderedModules.length - 2;
-                sig.progress = 1;
-              } else {
-                sig.label = resLabels[sig.stageIndex];
-              }
-            }
+            rm.m.statusText = "PROCESSING...";
           }
-        });
-      }
+        } else if (rm.m.activeGlow > 0) {
+          rm.m.activeGlow = Math.max(0, rm.m.activeGlow - delta * 2.0);
+          if (rm.m.activeGlow <= 0) {
+            rm.m.statusText = rm.m.protocol;
+          }
+        }
+      });
 
-      // Draw all signal packets at their current positions (motionless when stopped)
-      signals.forEach((sig) => {
-        const from = renderedModules[sig.stageIndex];
-        const to = renderedModules[sig.stageIndex + 1];
+      // Safe, modular signal packet drawer
+      function drawSignalPacket(
+        stageIdx: number,
+        direction: 1 | -1,
+        progress: number,
+        label: string
+      ) {
+        if (stageIdx < 0 || stageIdx >= totalStages) return;
+        const from = renderedModules[stageIdx];
+        const to = renderedModules[stageIdx + 1];
         if (!from || !to) return;
 
         const midY = (from.cy + to.cy) * 0.5;
-
-        // Calculate Head and Tail points along the respective rail
         let p0x: number, p0y: number, p1x: number, p1y: number, p2x: number, p2y: number, p3x: number, p3y: number;
 
-        if (sig.direction === 1) {
-          // Forward rail (top to bottom, offset -6)
-          p0x = from.cx; p0y = from.cy - 6;
-          p1x = from.cx; p1y = midY - 6;
-          p2x = to.cx;   p2y = midY - 6;
-          p3x = to.cx;   p3y = to.cy - 6;
+        if (direction === 1) {
+          // Forward Request rail (offset -3.5px)
+          p0x = from.cx; p0y = from.cy - 3.5;
+          p1x = from.cx; p1y = midY - 3.5;
+          p2x = to.cx;   p2y = midY - 3.5;
+          p3x = to.cx;   p3y = to.cy - 3.5;
         } else {
-          // Return rail (bottom to top, offset +6)
-          p0x = to.cx;   p0y = to.cy + 6;
-          p1x = to.cx;   p1y = midY + 6;
-          p2x = from.cx; p2y = midY + 6;
-          p3x = from.cx; p3y = from.cy + 6;
+          // Return Response rail (offset +3.5px)
+          p0x = to.cx;   p0y = to.cy + 3.5;
+          p1x = to.cx;   p1y = midY + 3.5;
+          p2x = from.cx; p2y = midY + 3.5;
+          p3x = from.cx; p3y = from.cy + 3.5;
         }
 
-        const isOutput = sig.direction === -1;
+        const isOutput = direction === -1;
+        const ptHead = getCubicBezierPoint(p0x, p0y, p1x, p1y, p2x, p2y, p3x, p3y, progress);
+        const ptTail1 = getCubicBezierPoint(p0x, p0y, p1x, p1y, p2x, p2y, p3x, p3y, Math.max(0, progress - 0.035));
+        const ptTail2 = getCubicBezierPoint(p0x, p0y, p1x, p1y, p2x, p2y, p3x, p3y, Math.max(0, progress - 0.07));
 
-        const ptHead = getCubicBezierPoint(p0x, p0y, p1x, p1y, p2x, p2y, p3x, p3y, sig.progress);
-        const ptTail1 = getCubicBezierPoint(p0x, p0y, p1x, p1y, p2x, p2y, p3x, p3y, sig.progress - 0.035);
-        const ptTail2 = getCubicBezierPoint(p0x, p0y, p1x, p1y, p2x, p2y, p3x, p3y, sig.progress - 0.07);
-
-        if (ptHead.y > -20 && ptHead.y < height + 20) {
-          // Trailing Comet Tail 2 (Theme Cyan & Soft Indigo)
-          ctx.fillStyle = isOutput ? "rgba(129, 140, 248, 0.2)" : "rgba(56, 189, 248, 0.18)";
+        if (ptHead.y > -25 && ptHead.y < height + 25) {
+          // Comet Tail 2
+          ctx.fillStyle = isOutput ? "rgba(129, 140, 248, 0.16)" : "rgba(56, 189, 248, 0.15)";
           ctx.beginPath();
-          ctx.arc(ptTail2.x, ptTail2.y, 2.2, 0, Math.PI * 2);
+          ctx.arc(ptTail2.x, ptTail2.y, 1.4, 0, Math.PI * 2);
           ctx.fill();
 
-          // Trailing Comet Tail 1
-          ctx.fillStyle = isOutput ? "rgba(165, 180, 252, 0.45)" : "rgba(125, 211, 252, 0.45)";
+          // Comet Tail 1
+          ctx.fillStyle = isOutput ? "rgba(165, 180, 252, 0.35)" : "rgba(125, 211, 252, 0.38)";
           ctx.beginPath();
-          ctx.arc(ptTail1.x, ptTail1.y, 3.2, 0, Math.PI * 2);
+          ctx.arc(ptTail1.x, ptTail1.y, 2.2, 0, Math.PI * 2);
           ctx.fill();
 
-          // Outer luminous glow
-          ctx.fillStyle = isOutput
-            ? "rgba(129, 140, 248, 0.38)"
-            : "rgba(56, 189, 248, 0.35)";
+          // Glow halo
+          ctx.fillStyle = isOutput ? "rgba(129, 140, 248, 0.3)" : "rgba(56, 189, 248, 0.32)";
           ctx.beginPath();
-          ctx.arc(ptHead.x, ptHead.y, 8, 0, Math.PI * 2);
+          ctx.arc(ptHead.x, ptHead.y, 6.0, 0, Math.PI * 2);
           ctx.fill();
 
-          // Signal Core (Vivid photon core)
+          // Photon core
           ctx.fillStyle = isOutput ? "#c7d2fe" : "#ffffff";
           ctx.beginPath();
-          ctx.arc(ptHead.x, ptHead.y, 3.8, 0, Math.PI * 2);
+          ctx.arc(ptHead.x, ptHead.y, 2.6, 0, Math.PI * 2);
           ctx.fill();
 
-          // Signal Process Label Badge (Matches clean theme card aesthetic)
-          const labelText = sig.label;
-          ctx.font = "600 8.5px 'DM Mono', monospace";
-          const textW = ctx.measureText(labelText).width;
-          const chipX = ptHead.x + 10;
-          const chipY = ptHead.y - 7;
+          // Telemetry chip
+          ctx.font = "500 7.5px 'DM Mono', monospace";
+          const textW = ctx.measureText(label).width;
+          const chipX = ptHead.x + 8;
+          const chipY = ptHead.y - 6;
 
-          // Theme glass chip background
-          ctx.fillStyle = "rgba(15, 23, 42, 0.88)";
-          ctx.strokeStyle = isOutput ? "rgba(129, 140, 248, 0.35)" : "rgba(56, 189, 248, 0.35)";
+          ctx.fillStyle = "rgba(15, 23, 42, 0.9)";
+          ctx.strokeStyle = isOutput ? "rgba(129, 140, 248, 0.4)" : "rgba(56, 189, 248, 0.4)";
           ctx.lineWidth = 1;
           ctx.beginPath();
-          ctx.rect(chipX - 4, chipY, textW + 8, 14);
+          ctx.rect(chipX - 3, chipY, textW + 6, 12);
           ctx.fill();
           ctx.stroke();
 
           ctx.fillStyle = isOutput ? "#c7d2fe" : "#bae6fd";
-          ctx.fillText(labelText, chipX, ptHead.y + 3);
+          ctx.fillText(label, chipX, ptHead.y + 2.5);
         }
-      });
+      }
+
+      // 1. PRIMARY SCROLL-TRACKING REQUEST PACKET:
+      // Glides continuously with user scroll through each conduit stage from API_GATEWAY down to EGRESS_OUTPUT!
+      const reqStage = Math.min(totalStages - 1, Math.floor(globalProgress));
+      const reqProg = globalProgress - reqStage;
+      drawSignalPacket(reqStage, 1, reqProg, reqLabels[reqStage] || "REQ: INGRESS");
+
+      // 2. PRIMARY SCROLL-TRACKING RESPONSE PACKET:
+      // Glides along the return response rail
+      const resStage = (reqStage + 4) % totalStages;
+      const resProg = 1 - reqProg;
+      drawSignalPacket(resStage, -1, resProg, resLabels[resStage] || "RES: 200 OK");
+
+      // 3. PIPELINE CONTINUOUS FLOW PACKETS (REQUESTS & RESPONSES):
+      // Ensures visible activity on conduits throughout the architecture
+      const secReqStage = (reqStage + 2) % totalStages;
+      const secReqProg = (reqProg + 0.5) % 1;
+      drawSignalPacket(secReqStage, 1, secReqProg, reqLabels[secReqStage] || "REQ: PIPELINE");
+
+      const secResStage = (reqStage + 1) % totalStages;
+      const secResProg = (1 - reqProg + 0.5) % 1;
+      drawSignalPacket(secResStage, -1, secResProg, resLabels[secResStage] || "RES: PIPELINE");
 
       // ========================================================
-      // 6. DRAW ALL MODULE CARDS (INCLUDING LANGGRAPH_RAG & EGRESS)
+      // 6. DRAW ALL SERVERLESS ARCHITECTURE MODULE CARDS
       // ========================================================
       renderedModules.forEach((rm) => {
         if (!rm.isVisible) return;
 
         const { m, x, y, w, h } = rm;
+        const isHovered = activeTelemetryRef.current?.id === m.id;
         const isProcessing = m.activeGlow > 0;
         const glowRatio = m.activeGlow / 0.85;
-        const isLangGraph = m.id === 6;
-        const isEndModule = m.id === 7;
 
         // Module Glass Card background
-        ctx.fillStyle = isProcessing
-          ? `rgba(16, 32, 50, ${0.75 + glowRatio * 0.22})`
-          : "rgba(11, 16, 26, 0.72)";
+        ctx.fillStyle = isHovered
+          ? `rgba(16, 28, 52, 0.96)`
+          : isProcessing
+          ? `rgba(16, 32, 54, ${0.88 + glowRatio * 0.12})`
+          : "rgba(10, 16, 26, 0.90)";
 
         // Card border with dynamic pulse and stage-specific color identity
-        ctx.strokeStyle = isProcessing
-          ? `rgba(56, 189, 248, ${0.5 + glowRatio * 0.5})`
-          : isLangGraph
-          ? "rgba(168, 85, 247, 0.45)" // Purple glow for LangGraph RAG
-          : isEndModule
-          ? "rgba(129, 140, 248, 0.45)" // Indigo for egress output terminal
-          : "rgba(56, 189, 248, 0.22)";
-        ctx.lineWidth = isProcessing || isLangGraph || isEndModule ? 1.6 : 1;
+        ctx.strokeStyle = isHovered
+          ? m.accentColor
+          : isProcessing
+          ? `rgba(56, 189, 248, ${0.7 + glowRatio * 0.3})`
+          : `${m.accentColor}77`; // Soft translucent stage accent
+        ctx.lineWidth = isHovered ? 2.2 : isProcessing ? 1.8 : 1.2;
 
         const r = 8;
         ctx.beginPath();
@@ -791,13 +908,7 @@ export const NetworkBackground: React.FC = () => {
         ctx.stroke();
 
         // Corner engineering brackets
-        ctx.strokeStyle = isProcessing
-          ? "#38bdf8"
-          : isLangGraph
-          ? "#a855f7"
-          : isEndModule
-          ? "#818cf8"
-          : m.accentColor;
+        ctx.strokeStyle = isHovered || isProcessing ? "#ffffff" : m.accentColor;
         ctx.lineWidth = 1.5;
 
         ctx.beginPath();
@@ -813,16 +924,10 @@ export const NetworkBackground: React.FC = () => {
         ctx.stroke();
 
         // Status LED
-        const ledColor = isProcessing
-          ? "#38bdf8"
-          : isLangGraph
-          ? "#c084fc"
-          : isEndModule
-          ? "#a5b4fc"
-          : m.accentColor;
+        const ledColor = isProcessing ? "#38bdf8" : m.accentColor;
         ctx.fillStyle = ledColor;
         ctx.beginPath();
-        ctx.arc(x + 12, y + 15, isProcessing ? 3.5 : 2.5, 0, Math.PI * 2);
+        ctx.arc(x + 12, y + 15, isProcessing || isHovered ? 3.5 : 2.5, 0, Math.PI * 2);
         ctx.fill();
 
         if (isProcessing) {
@@ -834,31 +939,147 @@ export const NetworkBackground: React.FC = () => {
 
         // Status text / Protocol
         ctx.font = "600 9px 'DM Mono', monospace";
-        ctx.fillStyle = isProcessing
+        ctx.fillStyle = isHovered
+          ? m.accentColor
+          : isProcessing
           ? "#38bdf8"
-          : isLangGraph
-          ? "#c084fc"
-          : isEndModule
-          ? "#818cf8"
-          : "rgba(148, 163, 184, 0.8)";
+          : "rgba(148, 163, 184, 0.85)";
         ctx.fillText(m.statusText, x + 22, y + 18);
 
         // Module Name
         ctx.font = "600 11px 'DM Mono', monospace";
-        ctx.fillStyle = isProcessing
-          ? "#ffffff"
-          : isLangGraph
-          ? "#f5f3ff"
-          : isEndModule
-          ? "#e0e7ff"
-          : "#f8fafc";
+        ctx.fillStyle = isHovered || isProcessing ? "#ffffff" : "#f1f5f9";
         ctx.fillText(m.tag, x + 12, y + 39);
 
         // Subtitle / Code token
         ctx.font = "500 10px 'DM Mono', monospace";
-        ctx.fillStyle = isLangGraph ? "#c084fc" : isEndModule ? "#818cf8" : m.accentColor;
+        ctx.fillStyle = m.accentColor;
         ctx.fillText(m.sub, x + 12, y + 57);
       });
+
+      // ========================================================
+      // 7. MODULE HOVER INSPECTION & 60FPS TELEMETRY HUD SYNC
+      // Viewport-aware collision handling & floating DOM HUD at z-index 9999
+      // ========================================================
+      let hoveredRm: (typeof renderedModules)[0] | null = null;
+      if (mouse.x > 0 && mouse.y > 0) {
+        for (let i = 0; i < renderedModules.length; i++) {
+          const rm = renderedModules[i];
+          if (!rm.isVisible) continue;
+          // Generous hit box for effortless hover targeting
+          if (
+            mouse.x >= rm.x - 10 &&
+            mouse.x <= rm.x + rm.w + 10 &&
+            mouse.y >= rm.y - 10 &&
+            mouse.y <= rm.y + rm.h + 10
+          ) {
+            hoveredRm = rm;
+            break;
+          }
+        }
+      }
+
+      // Handle hover telemetry state transition
+      if (hoveredRm) {
+        if (dismissTimeoutRef.current) {
+          clearTimeout(dismissTimeoutRef.current);
+          dismissTimeoutRef.current = null;
+        }
+
+        const tData: TelemetryData = {
+          id: hoveredRm.m.id,
+          stageNumber: hoveredRm.m.stageNumber,
+          tag: hoveredRm.m.tag,
+          sub: hoveredRm.m.sub,
+          protocol: hoveredRm.m.protocol,
+          accentColor: hoveredRm.m.accentColor,
+          ioSample: hoveredRm.m.ioSample,
+          metrics: hoveredRm.m.metrics,
+        };
+
+        if (activeTelemetryRef.current?.id !== hoveredRm.m.id) {
+          activeTelemetryRef.current = tData;
+          setActiveTelemetry(tData);
+        }
+      } else if (!isOverOverlayRef.current && activeTelemetryRef.current) {
+        // If neither module nor overlay is hovered, dismiss with smooth grace window
+        if (!dismissTimeoutRef.current) {
+          dismissTimeoutRef.current = setTimeout(() => {
+            activeTelemetryRef.current = null;
+            setActiveTelemetry(null);
+            dismissTimeoutRef.current = null;
+          }, 200);
+        }
+      }
+
+      // Real-time 60fps positioning of the HUD overlay while active
+      if (activeTelemetryRef.current) {
+        const activeId = activeTelemetryRef.current.id;
+        const activeMod = renderedModules.find((rm) => rm.m.id === activeId);
+
+        if (activeMod && activeMod.isVisible) {
+          const boxWidth = Math.min(340, width - 24);
+          const boxHeight = 160;
+
+          let targetX: number;
+          let targetY: number;
+
+          if (width < 768) {
+            // Mobile / Small Screen: Center horizontally, place below or above module
+            targetX = Math.max(12, (width - boxWidth) * 0.5);
+            if (activeMod.y + activeMod.h + boxHeight + 16 < height) {
+              targetY = activeMod.y + activeMod.h + 12;
+            } else {
+              targetY = Math.max(12, activeMod.y - boxHeight - 12);
+            }
+          } else {
+            // Desktop: Align adjacent to module with smart edge collision handling
+            if (activeMod.m.align === "left") {
+              targetX = activeMod.x + activeMod.w + 16;
+              // If placing on the right would exceed screen boundary
+              if (targetX + boxWidth > width - 12) {
+                targetX = Math.max(12, width - boxWidth - 12);
+              }
+            } else {
+              targetX = activeMod.x - boxWidth - 16;
+              // If placing on the left would exceed screen boundary
+              if (targetX < 12) {
+                targetX = 12;
+              }
+            }
+            targetY = activeMod.y + activeMod.h * 0.5 - boxHeight * 0.5;
+          }
+
+          // Strict viewport clamping: never clipped on any edge
+          targetX = Math.max(12, Math.min(width - boxWidth - 12, targetX));
+          targetY = Math.max(12, Math.min(height - boxHeight - 12, targetY));
+
+          if (overlayRef.current) {
+            overlayRef.current.style.transform = `translate3d(${targetX}px, ${targetY}px, 0)`;
+          }
+
+          // Draw high-tech animated canvas connecting beam from module to overlay anchor
+          const fromAnchorX = activeMod.m.align === "left" ? activeMod.x + activeMod.w : activeMod.x;
+          const fromAnchorY = activeMod.cy;
+          const toAnchorX = activeMod.m.align === "left" ? targetX : targetX + boxWidth;
+          const toAnchorY = Math.max(targetY + 16, Math.min(targetY + boxHeight - 16, activeMod.cy));
+
+          ctx.strokeStyle = "rgba(56, 189, 248, 0.45)";
+          ctx.lineWidth = 1.2;
+          ctx.setLineDash([3, 4]);
+          ctx.beginPath();
+          ctx.moveTo(fromAnchorX, fromAnchorY);
+          ctx.lineTo(toAnchorX, toAnchorY);
+          ctx.stroke();
+          ctx.setLineDash([]);
+
+          // Subtle pulse reticle on the hovered module anchor
+          ctx.fillStyle = activeTelemetryRef.current.accentColor;
+          ctx.beginPath();
+          ctx.arc(fromAnchorX, fromAnchorY, 3, 0, Math.PI * 2);
+          ctx.fill();
+        }
+      }
     }
 
     function onVisibilityChange() {
@@ -877,20 +1098,100 @@ export const NetworkBackground: React.FC = () => {
 
     return () => {
       cancelAnimationFrame(animationId);
+      if (dismissTimeoutRef.current) {
+        clearTimeout(dismissTimeoutRef.current);
+      }
       window.removeEventListener("scroll", handleScroll);
       window.removeEventListener("resize", resize);
       window.removeEventListener("mousemove", handleMouseMove);
       window.removeEventListener("mouseleave", handleMouseLeave);
+      window.removeEventListener("touchstart", handleTouch);
       document.removeEventListener("visibilitychange", onVisibilityChange);
     };
   }, []);
 
   return (
-    <canvas
-      ref={canvasRef}
-      className="network-bg-canvas"
-      aria-hidden="true"
-    />
+    <>
+      <canvas
+        ref={canvasRef}
+        className="network-bg-canvas"
+        aria-hidden="true"
+      />
+      {activeTelemetry && (
+        <div
+          ref={overlayRef}
+          className={`telemetry-inspection-overlay ${activeTelemetry ? "is-active" : ""}`}
+          style={{
+            "--hud-accent": activeTelemetry.accentColor,
+          } as React.CSSProperties}
+          onMouseEnter={() => {
+            isOverOverlayRef.current = true;
+            if (dismissTimeoutRef.current) {
+              clearTimeout(dismissTimeoutRef.current);
+              dismissTimeoutRef.current = null;
+            }
+          }}
+          onMouseLeave={() => {
+            isOverOverlayRef.current = false;
+          }}
+        >
+          <div className="telemetry-header">
+            <div className="telemetry-header-left">
+              <span
+                className="telemetry-led"
+                style={{
+                  background: activeTelemetry.accentColor,
+                  boxShadow: `0 0 10px ${activeTelemetry.accentColor}`,
+                }}
+              />
+              <span className="telemetry-stage-pill">{activeTelemetry.stageNumber}</span>
+              <span className="telemetry-title">{activeTelemetry.tag}</span>
+            </div>
+            <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
+              <span className="telemetry-protocol-badge">{activeTelemetry.protocol}</span>
+              <button
+                type="button"
+                className="telemetry-close-btn"
+                onClick={() => {
+                  activeTelemetryRef.current = null;
+                  setActiveTelemetry(null);
+                }}
+                aria-label="Close telemetry overlay"
+              >
+                ×
+              </button>
+            </div>
+          </div>
+
+          <div className="telemetry-body">
+            <div className="telemetry-row">
+              <span className="telemetry-badge input-badge">INPUT</span>
+              <code className="telemetry-code">{activeTelemetry.ioSample.input}</code>
+            </div>
+            <div className="telemetry-row">
+              <span className="telemetry-badge proc-badge">PROC</span>
+              <code className="telemetry-code">{activeTelemetry.ioSample.process}</code>
+            </div>
+            <div className="telemetry-row">
+              <span className="telemetry-badge output-badge">OUTPUT</span>
+              <code className="telemetry-code">{activeTelemetry.ioSample.output}</code>
+            </div>
+          </div>
+
+          <div className="telemetry-footer">
+            <span className="telemetry-metric">
+              <strong>LATENCY:</strong> {activeTelemetry.metrics.latency}
+            </span>
+            <span className="telemetry-metric">
+              <strong>RATE:</strong> {activeTelemetry.metrics.throughput}
+            </span>
+            <span className="telemetry-metric">
+              <strong>SEC:</strong> {activeTelemetry.metrics.security}
+            </span>
+          </div>
+        </div>
+      )}
+    </>
   );
 };
 

@@ -1640,6 +1640,39 @@
       .hero-visual:hover .avatar-wrap { transform:none; }
     }
 
+  
+    /* Motion tuning: keep movement on the compositor and avoid scroll-time paint work. */
+    html { scroll-behavior:smooth; scroll-padding-top:82px; }
+    section[id] { scroll-margin-top:82px; }
+    .reveal,
+    .reveal.on {
+      clip-path:none !important;
+      filter:none !important;
+      transition:opacity 560ms cubic-bezier(.22,.68,0,1),transform 680ms cubic-bezier(.22,.68,0,1) !important;
+    }
+    .reveal:not(.on) { opacity:0; transform:translate3d(0,20px,0) scale(.995); will-change:opacity,transform; }
+    .reveal.on { opacity:1; transform:translate3d(0,0,0) scale(1); will-change:auto; }
+    .hero-copy { animation:none !important; }
+    .hero-copy { filter:none !important; }
+    .hero-copy h1,.hero-copy .hero-kicker,.hero-copy .hero-role,.hero-copy .hero-intro,
+    .hero-copy .hero-specialties,.hero-copy .hero-cta,.hero-copy .hero-stack { filter:none !important; }
+    .hero-visual { animation:heroFloat 11s ease-in-out infinite !important; }
+    .hero-orbit-one { animation:orbitDrift 52s linear infinite !important; }
+    .hero-orbit-two { animation:orbitDrift 68s linear infinite reverse !important; }
+    .hero-glow { animation:glowBreath 11s ease-in-out infinite alternate !important; }
+    .avatar-tag { animation:tagFloat 10s ease-in-out infinite !important; }
+    .panel,.skill-card,.project-card,.cert-card,.contact-item {
+      transition:transform 260ms cubic-bezier(.2,.7,.2,1),border-color 220ms ease,background-color 220ms ease,box-shadow 260ms ease !important;
+    }
+    .btn,.magnetic { transition:transform 260ms cubic-bezier(.2,.7,.2,1),box-shadow 260ms ease,border-color 220ms ease,color 220ms ease,background-color 220ms ease !important; }
+    .motion-wipe { display:none !important; }
+    .motion-progress { height:1px; box-shadow:0 0 8px rgba(56,189,248,.3); }
+    @media (prefers-reduced-motion:reduce) {
+      html { scroll-behavior:auto; }
+      .reveal,.reveal.on { transition:none !important; opacity:1; transform:none; }
+      .hero-visual,.hero-orbit-one,.hero-orbit-two,.hero-glow,.avatar-tag { animation:none !important; }
+    }
+
   </style>
   <script type="application/ld+json">
   {
@@ -2527,24 +2560,28 @@
       }
 
       const root = document.documentElement;
-      if (!prefersReducedMotion) {
+      if (!prefersReducedMotion && window.matchMedia("(pointer:fine)").matches) {
         let pointerX = 0;
         let pointerY = 0;
         let targetX = 0;
         let targetY = 0;
-        window.addEventListener("pointermove", (event) => {
-          pointerX = ((event.clientX / window.innerWidth) - 0.5) * 24;
-          pointerY = ((event.clientY / window.innerHeight) - 0.5) * 18;
-        });
-
-        const applyBgShift = () => {
-          targetX += (pointerX - targetX) * 0.08;
-          targetY += (pointerY - targetY) * 0.08;
-          root.style.setProperty("--bg-shift-x", `${targetX.toFixed(2)}px`);
-          root.style.setProperty("--bg-shift-y", `${targetY.toFixed(2)}px`);
-          requestAnimationFrame(applyBgShift);
+        let pointerRaf = 0;
+        const easePointer = () => {
+          targetX += (pointerX - targetX) * 0.16;
+          targetY += (pointerY - targetY) * 0.16;
+          root.style.setProperty("--bg-shift-x", `${targetX.toFixed(1)}px`);
+          root.style.setProperty("--bg-shift-y", `${targetY.toFixed(1)}px`);
+          if (Math.abs(pointerX - targetX) > 0.15 || Math.abs(pointerY - targetY) > 0.15) {
+            pointerRaf = requestAnimationFrame(easePointer);
+          } else {
+            pointerRaf = 0;
+          }
         };
-        applyBgShift();
+        window.addEventListener("pointermove", (event) => {
+          pointerX = ((event.clientX / window.innerWidth) - 0.5) * 14;
+          pointerY = ((event.clientY / window.innerHeight) - 0.5) * 10;
+          if (!pointerRaf) pointerRaf = requestAnimationFrame(easePointer);
+        }, { passive: true });
       }
 
       const bgCanvas = document.getElementById("bgCanvas");
@@ -2557,10 +2594,11 @@
         let particles = [];
         let rafId = 0;
         let lastTime = 0;
+        let lastFrame = 0;
 
         const particleCount = () => {
           const base = Math.round((window.innerWidth * window.innerHeight) / 38000);
-          return Math.max(16, Math.min(window.innerWidth < 760 ? 26 : 40, base));
+          return Math.max(12, Math.min(window.innerWidth < 760 ? 16 : 24, base));
         };
 
         const createParticles = () => {
@@ -2585,7 +2623,13 @@
         };
 
         const draw = (time) => {
-          const dt = Math.min(32, time - lastTime || 16);
+          if (!reducedMotion && document.hidden) return;
+          if (!reducedMotion && time - lastFrame < 33) {
+            rafId = requestAnimationFrame(draw);
+            return;
+          }
+          lastFrame = time;
+          const dt = Math.min(40, time - lastTime || 16);
           lastTime = time;
           ctx.clearRect(0, 0, width, height);
 
@@ -2646,6 +2690,16 @@
           draw(0);
         }
         window.addEventListener("resize", resizeCanvas, { passive: true });
+        document.addEventListener("visibilitychange", () => {
+          if (document.hidden) {
+            cancelAnimationFrame(rafId);
+            rafId = 0;
+          } else if (!reducedMotion && !rafId) {
+            lastTime = 0;
+            lastFrame = 0;
+            rafId = requestAnimationFrame(draw);
+          }
+        });
       }
 
       const sectionIds = ["about", "experience", "skills", "projects", "certifications", "contact"];
@@ -2700,11 +2754,7 @@
             });
             updateTopicVisibility();
           };
-          if (!prefersReducedMotion && document.startViewTransition) {
-            document.startViewTransition(applyFilter);
-          } else {
-            applyFilter();
-          }
+          applyFilter();
         });
       }
       updateTopicVisibility();
@@ -2770,11 +2820,6 @@
       const progress = document.createElement("div");
       progress.className = "motion-progress";
       document.body.appendChild(progress);
-      const wipe = document.createElement("div");
-      wipe.className = "motion-wipe";
-      wipe.setAttribute("aria-hidden", "true");
-      document.body.appendChild(wipe);
-
       let progressTicking = false;
       const updateProgress = () => {
         const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
@@ -2789,24 +2834,7 @@
       }, { passive: true });
       updateProgress();
 
-      if (!prefersReducedMotion) {
-        document.addEventListener("click", (event) => {
-          const link = event.target.closest('a[href^="#"]');
-          if (!link) return;
-          const id = link.getAttribute("href").slice(1);
-          const target = document.getElementById(id);
-          if (!target) return;
-          event.preventDefault();
-          if (wipe.classList.contains("cover") || wipe.classList.contains("release")) return;
-          wipe.className = "motion-wipe cover";
-          window.setTimeout(() => {
-            target.scrollIntoView({ behavior: "instant", block: "start" });
-            history.replaceState(null, "", `#${id}`);
-            wipe.className = "motion-wipe release";
-            window.setTimeout(() => { wipe.className = "motion-wipe"; }, 780);
-          }, 420);
-        });
-      }
+
 
     })();
   </script>

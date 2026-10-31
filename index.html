@@ -4,18 +4,18 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Kumaresan Kanthasamy | AI Engineer & Agentic AI Developer Portfolio</title>
+  <title>Kumaresan Kanthasamy | Associate Software Developer & Backend Engineer</title>
   <meta name="description"
-    content="AI Engineer specializing in Agentic AI, RAG pipelines, LangGraph, FastAPI, and scalable ML systems. Explore projects, certifications, and full-stack development expertise." />
+    content="Associate Software Developer at Meyi Cloud Solutions, building backend services and cloud applications with TypeScript, Node.js, NestJS, PostgreSQL, and AWS." />
   <meta name="keywords"
-    content="AI Engineer, Agentic AI Developer, Machine Learning Engineer, RAG Systems, LangGraph, FastAPI, Python, Full Stack Developer, NLP, Deep Learning, LangChain, Multi-Agent Systems" />
+    content="Associate Software Developer, Backend Engineer, TypeScript, Node.js, NestJS, PostgreSQL, AWS, Docker, Next.js, Python, AI, RAG" />
   <meta name="author" content="Kumaresan Kanthasamy" />
   <meta name="robots" content="index, follow" />
   <link rel="canonical" href="https://kumaresan.is-a.dev/" />
 
   <!-- Open Graph / Social Media -->
   <meta property="og:type" content="website" />
-  <meta property="og:title" content="Kumaresan Kanthasamy | AI Engineer & Agentic AI Developer" />
+  <meta property="og:title" content="Kumaresan Kanthasamy | Associate Software Developer & Backend Engineer" />
   <meta property="og:description"
     content="AI Engineer specializing in Agentic AI, RAG pipelines, LangGraph, FastAPI, and scalable ML systems. Explore projects, certifications, and full-stack development expertise." />
   <meta property="og:url" content="https://kumaresan.is-a.dev/" />
@@ -24,7 +24,7 @@
 
   <!-- Twitter Card -->
   <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:title" content="Kumaresan Kanthasamy | AI Engineer & Agentic AI Developer" />
+  <meta name="twitter:title" content="Kumaresan Kanthasamy | Associate Software Developer & Backend Engineer" />
   <meta name="twitter:description"
     content="AI Engineer specializing in Agentic AI, RAG pipelines, LangGraph, FastAPI, and scalable ML systems." />
   <meta name="twitter:image" content="https://kumaresan.is-a.dev/Kumaresan%20K.jpg" />
@@ -1406,7 +1406,23 @@
         opacity: 0.28;
       }
     }
-  </style>
+  
+    /* Smooth, restrained motion and organic morphing accents */
+    .experience-card { padding: clamp(1.2rem, 2.5vw, 2rem); }
+    .experience-top { display:flex; justify-content:space-between; align-items:flex-start; gap:1rem; flex-wrap:wrap; }
+    .experience-top h3 { margin:0; color:var(--text); font-family:"Space Grotesk",sans-serif; font-size:1.25rem; }
+    .experience-company { margin:.2rem 0 0; color:var(--blue); font-weight:600; }
+    .experience-date { color:var(--text-dim); font-size:.78rem; border:1px solid var(--stroke); border-radius:999px; padding:.35rem .7rem; }
+    .experience-card ul { padding-left:1.2rem; margin:.9rem 0 1rem; }
+    .experience-card li { margin:.35rem 0; }
+    .hero-visual { border-radius:34% 66% 58% 42% / 42% 38% 62% 58%; animation:heroMorph 16s ease-in-out infinite alternate; transition:border-radius 900ms var(--spring), transform 500ms var(--spring), box-shadow 500ms ease; }
+    .hero-visual:hover { box-shadow:0 22px 55px rgba(14,165,233,.2); }
+    @keyframes heroMorph { 0% { border-radius:34% 66% 58% 42% / 42% 38% 62% 58%; } 50% { border-radius:58% 42% 37% 63% / 52% 62% 38% 48%; } 100% { border-radius:43% 57% 64% 36% / 38% 48% 52% 62%; } }
+    .panel, .skill-card, .project-card, .cert-card, .contact-item { transition:transform 420ms var(--spring), border-color 320ms ease, background 320ms ease, box-shadow 420ms ease; }
+    .reveal { transition:opacity 700ms ease, transform 850ms var(--spring), filter 700ms ease; }
+    .btn { transition:transform 320ms var(--spring), box-shadow 320ms ease, border-color 240ms ease, color 240ms ease, background 240ms ease; }
+    @media (prefers-reduced-motion: reduce) { .hero-visual { animation:none; } .reveal, .panel, .skill-card, .project-card, .cert-card, .contact-item, .btn { transition:none !important; } }
+</style>
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
@@ -1417,7 +1433,7 @@
         "name": "Kumaresan Kanthasamy",
         "url": "https://kumaresan.is-a.dev/",
         "image": "https://kumaresan.is-a.dev/Kumaresan%20K.jpg",
-        "jobTitle": "AI Engineer and Agentic AI Developer",
+        "jobTitle": "Associate Software Developer and Backend Engineer",
         "description": "AI Engineer specializing in Agentic AI, RAG pipelines, LangGraph, FastAPI, and scalable machine learning systems.",
         "alumniOf": {
           "@type": "CollegeOrUniversity",
@@ -1447,7 +1463,7 @@
         "@id": "https://kumaresan.is-a.dev/#website",
         "url": "https://kumaresan.is-a.dev/",
         "name": "Kumaresan Kanthasamy Portfolio",
-        "description": "Portfolio of Kumaresan Kanthasamy - AI Engineer and Agentic AI Developer specializing in RAG, LangGraph, FastAPI, and machine learning.",
+        "description": "Portfolio of Kumaresan Kanthasamy - Associate Software Developer and Backend Engineer specializing in RAG, LangGraph, FastAPI, and machine learning.",
         "publisher": {
           "@id": "https://kumaresan.is-a.dev/#person"
         }
@@ -1468,9 +1484,10 @@
   <header class="topbar">
     <div class="container topbar-inner">
       <a href="#hero" class="brand"><span>KK</span>.dev</a>
-      <div class="status-pill"><span class="dot"></span>AVAILABLE FOR OPPORTUNITIES</div>
+      <div class="status-pill"><span class="dot"></span>BUILDING PRODUCTION SOFTWARE</div>
       <ul class="nav" id="navList">
         <li><a href="#about">About</a></li>
+        <li><a href="#experience">Experience</a></li>
         <li><a href="#skills">Skills</a></li>
         <li><a href="#projects">Projects</a></li>
         <li><a href="#certifications">Certs</a></li>
@@ -1490,9 +1507,9 @@
             </span>
           </h1>
           <div class="roles">
-            <span class="role-chip">Agentic AI Developer</span>
-            <span class="role-chip">ML Engineer</span>
-            <span class="role-chip">Full Stack Developer</span>
+            <span class="role-chip">Associate Software Developer</span>
+            <span class="role-chip">Backend &amp; Cloud Engineer</span>
+            <span class="role-chip">AI Systems Developer</span>
           </div>
 
           <div class="code-box">
@@ -1524,11 +1541,11 @@
         <div class="hero-visual reveal" data-parallax>
           <div class="avatar-wrap">
             <img src="Kumaresan K.jpg"
-              alt="Kumaresan Kanthasamy - AI Engineer and Agentic AI Developer based in Chennai, India" loading="eager"
+              alt="Kumaresan Kanthasamy - Associate Software Developer and Backend Engineer based in Chennai, India" loading="eager"
               class="avatar" />
           </div>
-          <div class="avatar-tag top">RAG · FastAPI</div>
-          <div class="avatar-tag bottom">Python · LangGraph</div>
+          <div class="avatar-tag top">Node.js · TypeScript</div>
+          <div class="avatar-tag bottom">AWS · PostgreSQL</div>
         </div>
       </div>
     </section>
@@ -1541,13 +1558,14 @@
         </div>
         <div class="about-grid">
           <div class="about-copy reveal">
-            <p>I'm a <strong>Final Year B.E. Computer Science and Engineering</strong> student at <strong>Annamalai
-                University</strong>, passionate about <strong>Agentic AI</strong>, <strong>Machine Learning</strong>,
-              and <strong>Deep Learning</strong>. I love turning raw data into actionable insights, building intelligent
-              multi-agent systems, and crafting full-stack web applications.</p>
-            <p>Currently exploring <strong>LangGraph</strong>, <strong>RAG pipelines</strong>, and <strong>Computer
-                Vision</strong>. I built M.I.L.O - an entirely offline AI assistant powered by Python and Vosk - and I'm
-              open to internships, collaborations, and research opportunities in AI/ML and Agentic systems.</p>
+            <p>I'm an <strong>Associate Software Developer at Meyi Cloud Solutions</strong>, where I build and maintain
+              backend services and cloud-powered applications. My day-to-day work focuses on <strong>TypeScript</strong>,
+              <strong>Node.js</strong>, <strong>NestJS</strong>, <strong>PostgreSQL</strong>, and <strong>AWS</strong>,
+              with an emphasis on reliable APIs, secure workflows, and production readiness.</p>
+            <p>I'm currently contributing to a healthcare <strong>Radiology Information System (RIS/PACS)</strong>,
+              working across clinic workflows, imaging integrations, reporting, and document management. I also enjoy
+              building AI/ML projects, especially practical RAG and agentic systems. I hold a B.E. in Computer Science
+              and Engineering (Data Science) from <strong>Annamalai University</strong>.</p>
           </div>
           <div class="panel reveal">
             <div class="stats-grid">
@@ -1573,10 +1591,38 @@
       </div>
     </section>
 
+
+    <section id="experience">
+      <div class="container">
+        <div class="section-head reveal">
+          <div class="section-eyebrow">002 · Experience</div>
+          <h2 class="section-title">Where I've <em>Worked</em></h2>
+        </div>
+        <article class="panel experience-card reveal">
+          <div class="experience-top">
+            <div>
+              <h3>Associate Software Developer</h3>
+              <p class="experience-company">Meyi Cloud Solutions Private Limited</p>
+            </div>
+            <span class="experience-date">May 2025 – Present</span>
+          </div>
+          <p>Building backend services and cloud-based applications for production systems, with a focus on API design,
+            data integrity, authentication, and operational reliability.</p>
+          <ul>
+            <li>Developing TypeScript and Node.js services using NestJS and serverless AWS components.</li>
+            <li>Designing and integrating PostgreSQL-backed APIs and multi-tenant application workflows.</li>
+            <li>Contributing to a healthcare RIS/PACS platform, including appointment, study, reporting, and imaging-related workflows.</li>
+            <li>Working with Docker, AWS, automated testing, monitoring, and performance troubleshooting.</li>
+          </ul>
+          <div class="chips"><span class="chip">TypeScript</span><span class="chip">NestJS</span><span class="chip">PostgreSQL</span><span class="chip">AWS</span><span class="chip">Docker</span></div>
+        </article>
+      </div>
+    </section>
+
     <section id="skills">
       <div class="container">
         <div class="section-head reveal">
-          <div class="section-eyebrow">002 · Skills</div>
+          <div class="section-eyebrow">003 · Skills</div>
           <h2 class="section-title">Technical <em>Skills</em></h2>
         </div>
 
@@ -1700,7 +1746,7 @@
     <section id="projects">
       <div class="container">
         <div class="section-head reveal">
-          <div class="section-eyebrow">003 · Projects</div>
+          <div class="section-eyebrow">004 · Projects</div>
           <h2 class="section-title">Featured <em>Projects</em></h2>
         </div>
 
@@ -2090,14 +2136,13 @@
 
     <section id="contact" itemscope itemtype="https://schema.org/Person">
       <meta itemprop="name" content="Kumaresan Kanthasamy" />
-      <meta itemprop="jobTitle" content="AI Engineer and Agentic AI Developer" />
+      <meta itemprop="jobTitle" content="Associate Software Developer and Backend Engineer" />
       <meta itemprop="url" content="https://kumaresan.is-a.dev/" />
       <div class="container contact-wrap">
         <div class="reveal">
-          <div class="section-eyebrow">005 - Contact</div>
-          <h2 class="contact-title">Open To Work And <em>Collabs</em></h2>
-          <p>Open to freelance work and collaborations. Available for internships, research opportunities, and freelance
-            projects in AI/ML and full-stack development. Let's connect.</p>
+          <div class="section-eyebrow">006 · Contact</div>
+          <h2 class="contact-title">Let's Build Something <em>Useful</em></h2>
+          <p>I enjoy solving real engineering problems, building dependable backend systems, and collaborating on thoughtful products. Reach out if you would like to connect or discuss an opportunity.</p>
         </div>
 
         <address class="panel contact-panel reveal" aria-label="Contact links for Kumaresan Kanthasamy">
@@ -2121,8 +2166,8 @@
 
   <footer itemscope itemtype="https://schema.org/WPFooter">
     <div class="container footer-inner" itemscope itemtype="https://schema.org/Person">
-      <span>&copy; 2026 <span itemprop="name">Kumaresan Kanthasamy</span> - <span itemprop="jobTitle">AI Engineer &amp;
-          Agentic AI Developer</span></span>
+      <span>&copy; 2026 <span itemprop="name">Kumaresan Kanthasamy</span> - <span itemprop="jobTitle">Associate Software Developer &amp;
+          Backend Engineer</span></span>
       <span><a href="/sitemap.xml" rel="sitemap">Sitemap</a> - System Status: <span
           style="color: var(--blue);">Online</span></span>
     </div>
@@ -2187,10 +2232,10 @@
       if (introCode) {
         const codeLines = [
           { ln: "1", segments: [{ cls: "kw", text: "class" }, { text: " " }, { cls: "id", text: "Kumaresan" }, { text: ":" }] },
-          { ln: "2", segments: [{ text: "    title = [" }, { cls: "str", text: '"AI Engineer"' }, { text: ", " }, { cls: "str", text: '"Backend Developer"' }, { text: "]" }] },
-          { ln: "3", segments: [{ text: "    specialization = " }, { cls: "str", text: '"Agentic AI · RAG · Scalable Systems"' }] },
-          { ln: "4", segments: [{ text: "    stack = [" }, { cls: "str", text: '"Python"' }, { text: ", " }, { cls: "str", text: '"FastAPI"' }, { text: ", " }, { cls: "str", text: '"LangGraph"' }, { text: ", " }, { cls: "str", text: '"SQL"' }, { text: "]" }] },
-          { ln: "5", segments: [{ text: "    focus = " }, { cls: "str", text: '"building intelligent, production-ready AI systems"' }] },
+          { ln: "2", segments: [{ text: "    title = [" }, { cls: "str", text: '"Associate Software Developer"' }, { text: ", " }, { cls: "str", text: '"Backend Engineer"' }, { text: "]" }] },
+          { ln: "3", segments: [{ text: "    specialization = " }, { cls: "str", text: '"Backend APIs · Cloud · Healthcare Tech"' }] },
+          { ln: "4", segments: [{ text: "    stack = [" }, { cls: "str", text: '"TypeScript"' }, { text: ", " }, { cls: "str", text: '"NestJS"' }, { text: ", " }, { cls: "str", text: '"AWS"' }, { text: ", " }, { cls: "str", text: '"PostgreSQL"' }, { text: "]" }] },
+          { ln: "5", segments: [{ text: "    focus = " }, { cls: "str", text: '"building reliable, production-ready software"' }] },
           { ln: "6", segments: [] },
           { ln: "7", segments: [{ text: "    " }, { cls: "kw", text: "def" }, { text: " " }, { cls: "id", text: "build" }, { text: "(self):" }] },
           { ln: "8", segments: [{ text: "        " }, { cls: "kw", text: "return" }, { text: " " }, { cls: "str", text: '"AI products that solve real-world problems"' }] },
@@ -2396,7 +2441,7 @@
         window.addEventListener("resize", resizeCanvas, { passive: true });
       }
 
-      const sectionIds = ["about", "skills", "projects", "certifications", "contact"];
+      const sectionIds = ["about", "experience", "skills", "projects", "certifications", "contact"];
       const navMap = new Map([...document.querySelectorAll(".nav a")].map((a) => [a.getAttribute("href")?.slice(1), a]));
       const sectionObserver = new IntersectionObserver((entries) => {
         entries.forEach((entry) => {

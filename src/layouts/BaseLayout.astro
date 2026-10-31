@@ -1,21 +1,25 @@
 ---
 import "../styles/global.css";
-import "../styles/motion.css";
-const { title = "Kumaresan Kanthasamy — Software Developer", description = "Backend and cloud engineer building reliable software with TypeScript, Node.js, PostgreSQL and AWS." } = Astro.props;
+import "../styles/cinema.css";
+
+const {
+  title = "Kumaresan Kanthasamy — Backend & Cloud Systems Engineer",
+  description = "Backend and cloud engineer building reliable serverless systems, zero-trust databases, and high-concurrency microservices with TypeScript, Node.js, PostgreSQL and AWS."
+} = Astro.props;
 ---
 <!doctype html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="theme-color" content="#070b12" />
+    <meta name="theme-color" content="#05080e" />
     <meta name="description" content={description} />
     <meta name="author" content="Kumaresan Kanthasamy" />
     <link rel="canonical" href="https://kumaresan.is-a.dev/" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Manrope:wght@400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet" />
-    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22 fill=%22%2338d8ed%22>K</text></svg>" />
+    <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500;600&family=Manrope:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet" />
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22 fill=%22%2338e1f0%22>K</text></svg>" />
     <meta property="og:type" content="website" />
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
@@ -24,12 +28,17 @@ const { title = "Kumaresan Kanthasamy — Software Developer", description = "Ba
     <title>{title}</title>
   </head>
   <body>
+    <!-- 3D Backend Network & Telemetry Canvas -->
+    <canvas id="webgl-canvas" class="webgl-canvas" aria-hidden="true"></canvas>
+
     <div class="noise" aria-hidden="true"></div>
-    <div class="scroll-progress" aria-hidden="true"><span></span></div>
+
+    <!-- Pinned Cinema Stage and Virtual Scroll Track -->
     <slot />
+
     <script>
-      import { initMotion } from "../animations/motion";
-      initMotion();
+      import { initCinema } from "../animations/cinema";
+      initCinema();
     </script>
   </body>
 </html>

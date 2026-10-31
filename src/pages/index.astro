@@ -1,26 +1,402 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
-import SiteHeader from "../components/SiteHeader.astro";
-import Hero from "../components/Hero.astro";
-import SectionHeading from "../components/SectionHeading.astro";
-import Experience from "../components/Experience.astro";
-import Skills from "../components/Skills.astro";
-import Projects from "../components/Projects.astro";
-import Contact from "../components/Contact.astro";
+
+const projects = [
+  {
+    n: "01",
+    type: "AI · BACKEND ARCHITECTURE · CDC",
+    name: "DB-Native RAG Chatbot Widget",
+    desc: "Production-ready embeddable chatbot system synchronizing knowledge from operational databases via Change Data Capture (CDC), PostgreSQL triggers, Redis BullMQ queues, and pgvector embeddings for low-latency streaming answers.",
+    stack: ["TypeScript", "PostgreSQL", "pgvector", "Redis", "BullMQ", "OpenAI"],
+    url: "https://github.com/kuman002/db-native-rag-widget"
+  },
+  {
+    n: "02",
+    type: "OFFLINE AI · DESKTOP AUTOMATION",
+    name: "M.I.L.O. — Offline AI Assistant",
+    desc: "Privacy-focused, fully offline desktop assistant engineered with Python and PyQt5. Employs Vosk for offline voice recognition, local NLP processing, and native OS automation for task scheduling and finance tracking without internet access.",
+    stack: ["Python", "PyQt5", "Vosk", "Local NLP", "Automation", "SQLite"],
+    url: "https://github.com/kuman002/M.I.L.O"
+  },
+  {
+    n: "03",
+    type: "AGENTIC WORKFLOWS · LANGGRAPH",
+    name: "Agentic AI Backend",
+    desc: "Autonomous multi-agent orchestration service built on LangGraph and FastAPI. Features ChromaDB vector storage, semantic query routing, real-time web search fallback, and multi-turn stateful conversational memory.",
+    stack: ["Python", "LangGraph", "FastAPI", "ChromaDB", "RAG", "LangChain"],
+    url: "https://github.com/kuman002/agentic-backend"
+  },
+  {
+    n: "04",
+    type: "FASTAPI · MULTI-AGENT · WEB SEARCH",
+    name: "Agentic AI Chatbot",
+    desc: "Intelligent conversational agent integrating Tavily live web search, dynamic tool invocation, and streaming response delivery over FastAPI.",
+    stack: ["Python", "FastAPI", "LangChain", "Tavily API", "Streaming", "Pydantic"],
+    url: "https://github.com/kuman002/agentic-ai-backend"
+  },
+  {
+    n: "05",
+    type: "RAG · LLAMA · VECTOR RETRIEVAL",
+    name: "Academic Notes Intelligence System",
+    desc: "RAG-powered academic document Q&A engine utilizing ChromaDB vector embeddings and localized Llama models to deliver grounded, hallucination-resistant answers with precise page-level citations.",
+    stack: ["Python", "Flask", "ChromaDB", "Llama", "LangChain", "PyPDF"],
+    url: "https://github.com/kuman002/academic-notes-ai"
+  },
+  {
+    n: "06",
+    type: "DATA PIPELINE · PLAYWRIGHT · ETL",
+    name: "Slooze Data Engineering Challenge",
+    desc: "Robust industrial web scraper and ETL transformation pipeline targeting IndiaMART catalog listings using Playwright. Features resilient retry mechanics, structured schema validation, and automated reporting.",
+    stack: ["Python", "Playwright", "ETL", "Pandas", "Data Validation", "BeautifulSoup"],
+    url: "https://github.com/kuman002/slooze-take-home-challenge"
+  },
+  {
+    n: "07",
+    type: "DATA SCIENCE · PROBABILISTIC MODELING",
+    name: "Customer Lifetime Value (CLV) Prediction",
+    desc: "E-commerce customer transaction modeling using BG/NBD and Gamma-Gamma probabilistic models alongside RFM segmentation to forecast customer churn and 12-month expected customer monetary value.",
+    stack: ["Python", "BG/NBD", "Gamma-Gamma", "RFM Analysis", "Scikit-learn"],
+    url: "https://github.com/kuman002/customer-lifetime-value-CLV"
+  }
+];
+
+const skillGroups = [
+  { name: "Backend Services", items: ["Node.js", "TypeScript", "NestJS", "FastAPI", "Python", "REST APIs", "Microservices"] },
+  { name: "Database & Caching", items: ["PostgreSQL", "Drizzle ORM", "Redis", "BullMQ", "pgvector", "SQL Optimization", "Prisma"] },
+  { name: "Cloud & DevSecOps", items: ["AWS Lambda", "AWS Cognito", "API Gateway", "RDS", "Docker", "S3", "AES-256-GCM"] },
+  { name: "Applied AI & Systems", items: ["LangGraph", "ChromaDB", "RAG Systems", "Playwright ETL", "NLP (Vosk)", "Git"] }
+];
+
+const systemTabs = [
+  { idx: 0, num: "00", name: "ORIGIN" },
+  { idx: 1, num: "01", name: "ABOUT" },
+  { idx: 2, num: "02", name: "EXPERIENCE" },
+  { idx: 3, num: "03", name: "STACK" },
+  { idx: 4, num: "04", name: "PROJECTS" },
+  { idx: 5, num: "05", name: "CONTACT" },
+];
 ---
 <BaseLayout>
-  <SiteHeader />
-  <main>
-    <Hero />
-    <section class="about-section content-section" id="about">
-      <div class="section-shell about-grid">
-        <div><SectionHeading index="01" eyebrow="A LITTLE ABOUT ME" title="Curious by nature," accent="engineer by craft." /></div>
-        <div class="about-copy" data-reveal><p>I enjoy understanding how systems work, finding the right abstraction, and turning complex requirements into software people can depend on.</p><p>My work sits mainly around backend development and cloud engineering — designing APIs, working with data, and improving the reliability of production systems.</p><p>Outside the code, I'm continuously learning across distributed systems, cloud architecture, and applied AI.</p><a class="text-link" href="Kumaresan.pdf" target="_blank" rel="noopener">A little more on my résumé <span>↗</span></a></div>
-      </div>
-    </section>
-    <Experience />
-    <Skills />
-    <Projects />
-    <Contact />
+  <!-- Top Apex Sensor Readout -->
+  <header class="orbit-apex-sensor" aria-label="3D System cluster telemetry">
+    <span class="live-pulse" aria-hidden="true"></span>
+    <span id="apex-node-name">NODE 00: ORIGIN // [API_GATEWAY]</span>
+  </header>
+
+  <!-- 3D System Viewport Stage (Inside this 3D system, tabs shift one by one) -->
+  <main class="cinema-viewport">
+    <div class="cinema-world">
+
+      <!-- TAB 0: ORIGIN / HERO -->
+      <section class="cinema-scene is-active" id="scene-hero" aria-label="Origin node tab">
+        <div class="scene-container">
+          <div class="cinema-card">
+            <div class="card-header">
+              <div class="dots">
+                <span class="dot-r"></span>
+                <span class="dot-y"></span>
+                <span class="dot-g"></span>
+              </div>
+              <div class="tag">
+                <b>NODE 00</b>
+                <span>ORIGIN // [API_GATEWAY]</span>
+              </div>
+              <div class="telemetry">CLUSTER ONLINE · 60 FPS</div>
+            </div>
+            <div class="card-body">
+              <div class="hero-scene-grid">
+                <div>
+                  <div class="hero-tagline">
+                    <span class="dot"></span>
+                    <span>ASSOCIATE SOFTWARE DEVELOPER · INDIA</span>
+                  </div>
+                  <h1 class="hero-h1">
+                    <span>Engineering</span>
+                    <span class="outline">what's next<em>.</em></span>
+                  </h1>
+                  <p class="hero-bio">
+                    I'm Kumaresan — a backend engineer building resilient cloud architectures, high-concurrency microservices, and zero-trust encrypted database systems.
+                  </p>
+                  <div class="hero-buttons">
+                    <a class="c-btn c-btn-primary" href="#scene-experience">Explore Architecture <span>↘</span></a>
+                    <a class="c-btn c-btn-quiet" href="Kumaresan.pdf" target="_blank" rel="noopener">View Résumé <span>↗</span></a>
+                  </div>
+                </div>
+
+                <div class="hero-art-box">
+                  <div class="hero-floating-pill pill-1">{" runtime: 'node@22' "}</div>
+                  <div class="hero-floating-pill pill-2">⚡ AWS LAMBDA & RDS</div>
+                  <div class="hero-floating-pill pill-3">AES-256-GCM · ZERO-TRUST</div>
+                  <div class="hero-portrait">
+                    <img src="/Kumaresan%20K.jpg" alt="Portrait of Kumaresan Kanthasamy" fetchpriority="high" />
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- TAB 1: ABOUT ME -->
+      <section class="cinema-scene" id="scene-about" aria-label="About node tab">
+        <div class="scene-container">
+          <div class="cinema-card">
+            <div class="card-header">
+              <div class="dots">
+                <span class="dot-r"></span>
+                <span class="dot-y"></span>
+                <span class="dot-g"></span>
+              </div>
+              <div class="tag">
+                <b>NODE 01</b>
+                <span>PROFILE // [AUTH_COGNITO]</span>
+              </div>
+              <div class="telemetry">PASSIVE · 0 LATENCY</div>
+            </div>
+            <div class="card-body">
+              <div class="scene-header">
+                <p class="scene-eyebrow">01 / A LITTLE ABOUT ME</p>
+                <h2 class="scene-title">Curious by nature, <em>engineer by craft.</em></h2>
+              </div>
+              <div class="about-cinema-grid">
+                <div class="about-cinema-text">
+                  <p>I enjoy understanding how systems operate at scale, finding clean abstractions, and turning complex product requirements into dependable backend architectures.</p>
+                  <p>My work centers around designing event-driven microservices, cloud-native deployments on AWS, and PostgreSQL schemas with zero-trust database encryption.</p>
+                  <p>Outside production work, I experiment across distributed systems, agentic workflows, database triggers, and applied AI assistants.</p>
+                  <a class="c-btn c-btn-quiet" href="Kumaresan.pdf" target="_blank" rel="noopener">A little more on my résumé <span>↗</span></a>
+                </div>
+                <div class="about-metrics">
+                  <div class="metric-box">
+                    <div class="metric-val">99.99%</div>
+                    <div class="metric-lbl">UPTIME TARGETS</div>
+                  </div>
+                  <div class="metric-box">
+                    <div class="metric-val">&lt; 35ms</div>
+                    <div class="metric-lbl">p99 API LATENCY</div>
+                  </div>
+                  <div class="metric-box">
+                    <div class="metric-val">AES-256</div>
+                    <div class="metric-lbl">ZERO-LEAK CIPHER</div>
+                  </div>
+                  <div class="metric-box">
+                    <div class="metric-val">0 DRIFT</div>
+                    <div class="metric-lbl">SCHEMA CONTRACTS</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- TAB 2: EXPERIENCE -->
+      <section class="cinema-scene" id="scene-experience" aria-label="Experience node tab">
+        <div class="scene-container">
+          <div class="cinema-card">
+            <div class="card-header">
+              <div class="dots">
+                <span class="dot-r"></span>
+                <span class="dot-y"></span>
+                <span class="dot-g"></span>
+              </div>
+              <div class="tag">
+                <b>NODE 02</b>
+                <span>PRODUCTION // [LAMBDA_CLUSTER]</span>
+              </div>
+              <div class="telemetry">VERIFIED // AUDITED</div>
+            </div>
+            <div class="card-body">
+              <div class="scene-header">
+                <p class="scene-eyebrow">02 / THE JOURNEY</p>
+                <h2 class="scene-title">Building with <em>purpose.</em></h2>
+              </div>
+              <div class="exp-cinema-list">
+                <!-- Entry 01: Serverless Backend Architecture -->
+                <div class="exp-cinema-card">
+                  <div class="exp-badge">Company Project · Proprietary</div>
+                  <h3 class="exp-title">Serverless Backend Architecture & Cloud Systems</h3>
+                  <div class="exp-company">MEYI CLOUD SOLUTIONS PRIVATE LIMITED · ASSOCIATE SOFTWARE DEVELOPER</div>
+                  <ul>
+                    <li>Engineered AWS Cognito authentication flows covering user registration, SMS/email OTP verification, and hardened JWT token parsing for stateless session management.</li>
+                    <li>Architected application-level data encryption using AES-256-GCM combined with HMAC-SHA256 blind indexing to store and search sensitive patient and customer records safely inside AWS RDS PostgreSQL.</li>
+                    <li>Constructed high-throughput ticket management microservices with Drizzle ORM and PostgreSQL, pushing complex state validations directly into the database engine via SQL CASE expressions and NULL-safe <code>IS DISTINCT FROM</code> clauses.</li>
+                    <li>Standardized API Gateway JSON Schema validation contracts and packaged common utilities into reusable AWS Lambda Layers.</li>
+                  </ul>
+                  <div class="c-tag-list">
+                    <span>TypeScript</span><span>Node.js</span><span>AWS Lambda</span><span>AWS Cognito</span><span>PostgreSQL</span><span>Drizzle ORM</span><span>AES-256-GCM</span>
+                  </div>
+                </div>
+
+                <!-- Entry 02: Healthcare RIS/PACS -->
+                <div class="exp-cinema-card">
+                  <div class="exp-badge">Company Project · Healthcare Platform</div>
+                  <h3 class="exp-title">Healthcare RIS/PACS Platform (7XT RIS/PACS)</h3>
+                  <div class="exp-company">MEYI CLOUD SOLUTIONS PRIVATE LIMITED · SANITIZED CASE STUDY</div>
+                  <ul>
+                    <li>Designed backend RESTful APIs orchestrating multi-modality patient appointments, radiologist study worklists, and structured diagnostic reporting pipelines.</li>
+                    <li>Ensured clinical data consistency across multi-tenant hospital environments through transactional PostgreSQL schemas, database constraints, and DICOM metadata tagging.</li>
+                    <li>Packaged modular backend services into Docker containers, optimized complex relational queries for high-volume imaging records, and monitored operational health metrics on AWS.</li>
+                  </ul>
+                  <div class="c-tag-list">
+                    <span>TypeScript</span><span>NestJS</span><span>PostgreSQL</span><span>AWS</span><span>Docker</span><span>DICOM</span><span>Microservices</span>
+                  </div>
+                </div>
+
+                <!-- Entry 03: Education -->
+                <div class="exp-cinema-card">
+                  <h3 class="exp-title">B.E. — Computer Science & Engineering</h3>
+                  <div class="exp-company">ANNAMALAI UNIVERSITY · 2021 — 2025 · DATA SCIENCE SPECIALIZATION</div>
+                  <p style="margin: 0; color: #b8ccdb; font-size: 0.95rem;">
+                    Core coursework across distributed computing, database management systems, advanced algorithms, and applied machine learning.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- TAB 3: SKILLS -->
+      <section class="cinema-scene" id="scene-skills" aria-label="Skills toolkit tab">
+        <div class="scene-container">
+          <div class="cinema-card">
+            <div class="card-header">
+              <div class="dots">
+                <span class="dot-r"></span>
+                <span class="dot-y"></span>
+                <span class="dot-g"></span>
+              </div>
+              <div class="tag">
+                <b>NODE 03</b>
+                <span>TOOLKIT // [REDIS_BULLMQ]</span>
+              </div>
+              <div class="telemetry">PRODUCTION READY</div>
+            </div>
+            <div class="card-body">
+              <div class="scene-header">
+                <p class="scene-eyebrow">03 / TOOLS OF THE TRADE</p>
+                <h2 class="scene-title">A practical <em>toolkit.</em></h2>
+              </div>
+              <div class="skills-cinema-grid">
+                {skillGroups.map((group, idx) => (
+                  <div class="skill-cinema-card">
+                    <h3>{group.name} <span>0{idx + 1}</span></h3>
+                    <div class="skill-cinema-pills">
+                      {group.items.map((item) => <span>{item}</span>)}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- TAB 4: PROJECTS -->
+      <section class="cinema-scene" id="scene-projects" aria-label="Projects node tab">
+        <div class="scene-container">
+          <div class="cinema-card">
+            <div class="card-header">
+              <div class="dots">
+                <span class="dot-r"></span>
+                <span class="dot-y"></span>
+                <span class="dot-g"></span>
+              </div>
+              <div class="tag">
+                <b>NODE 04</b>
+                <span>REPOSITORIES // [PGSQL_PRIMARY]</span>
+              </div>
+              <div class="telemetry">PUBLIC REPOSITORIES</div>
+            </div>
+            <div class="card-body">
+              <div class="scene-header">
+                <p class="scene-eyebrow">04 / OPEN SOURCE & PERSONAL WORK</p>
+                <h2 class="scene-title">Engineered <em>projects.</em></h2>
+              </div>
+              <div class="projects-cinema-grid">
+                {projects.map((p) => (
+                  <a class="project-cinema-card" href={p.url} target="_blank" rel="noopener noreferrer">
+                    <div>
+                      <div class="proj-top">
+                        <span class="proj-num">{p.n}</span>
+                        <span class="proj-arrow">↗</span>
+                      </div>
+                      <h3 class="proj-name">{p.name}</h3>
+                      <p class="proj-desc">{p.desc}</p>
+                    </div>
+                    <div class="c-tag-list">
+                      {p.stack.map((item) => <span>{item}</span>)}
+                    </div>
+                  </a>
+                ))}
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- TAB 5: CONTACT -->
+      <section class="cinema-scene" id="scene-contact" aria-label="Contact node tab">
+        <div class="scene-container">
+          <div class="cinema-card">
+            <div class="card-header">
+              <div class="dots">
+                <span class="dot-r"></span>
+                <span class="dot-y"></span>
+                <span class="dot-g"></span>
+              </div>
+              <div class="tag">
+                <b>NODE 05</b>
+                <span>RESOLUTION // [S3_VAULT_KMS]</span>
+              </div>
+              <div class="telemetry">READY TO CONNECT</div>
+            </div>
+            <div class="card-body">
+              <div class="contact-cinema-wrap">
+                <div class="scene-header">
+                  <p class="scene-eyebrow">05 / RESOLUTION</p>
+                  <h2 class="scene-title">Let's build something <em>dependable.</em></h2>
+                </div>
+                <p>I'm always interested in thoughtful backend challenges, distributed systems, resilient data pipelines, and useful software built well.</p>
+                <div class="contact-cinema-btns">
+                  <a class="c-btn c-btn-primary" href="mailto:kumaresk002@gmail.com">Start a conversation <span>↗</span></a>
+                  <a class="c-btn c-btn-quiet" href="https://www.linkedin.com/in/kumaresan-k-4289452b4" target="_blank" rel="noopener">LinkedIn <span>↗</span></a>
+                  <a class="c-btn c-btn-quiet" href="https://github.com/kuman002" target="_blank" rel="noopener">GitHub <span>↗</span></a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+    </div>
   </main>
+
+  <!-- 3D System Dock (Bottom System Tabs Switcher) -->
+  <nav class="system-dock" aria-label="Portfolio section navigation">
+    <div class="system-status-indicator">
+      <span class="status-pulse" aria-hidden="true"></span>
+      <span>SYS_CLUSTER // ONLINE</span>
+    </div>
+
+    <div class="system-tabs" role="group" aria-label="Jump to a section">
+      {systemTabs.map((t) => (
+        <button class={`sys-tab-btn ${t.idx === 0 ? "is-active" : ""}`} data-tab={t.idx} aria-current={t.idx === 0 ? "step" : undefined}>
+          <span class="tab-num">{t.num}</span>
+          <span>{t.name}</span>
+        </button>
+      ))}
+    </div>
+
+    <div class="system-nav-arrows">
+      <button class="sys-arrow-btn prev-btn" aria-label="Previous section">←</button>
+      <span class="sys-counter"><b>01</b> / 06</span>
+      <button class="sys-arrow-btn next-btn" aria-label="Next section">
+        <span class="arrow-label">NEXT</span><span aria-hidden="true">→</span>
+      </button>
+    </div>
+  </nav>
+
+  <!-- Anamorphic Cinematic Lens Flare Streak -->
+  <div class="cinematic-lens-flare" aria-hidden="true"></div>
 </BaseLayout>

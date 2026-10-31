@@ -1548,6 +1548,98 @@
       .reveal:not(.on) { opacity:1; transform:none; filter:none; }
     }
 
+  
+    /* Portfolio direction: editorial layout, precise type, and restrained motion */
+    #hero { min-height: min(900px, calc(100svh - 64px)); padding-block: clamp(3rem, 7vw, 6.5rem) 4rem; overflow: clip; }
+    .hero { min-height: min(760px, calc(100svh - 120px)); grid-template-columns: minmax(0,1.12fr) minmax(340px,.88fr); gap:clamp(2rem,5vw,6rem); }
+    .hero-copy { max-width: 760px; position:relative; z-index:2; }
+    .hero-kicker { display:flex; align-items:center; gap:.7rem; margin-bottom:1.7rem; color:#8ca8c8; font:600 .66rem/1 "Space Grotesk",sans-serif; letter-spacing:.2em; }
+    .hero-kicker-line { width:34px; height:1px; background:linear-gradient(90deg,var(--blue),transparent); }
+    .hero-kicker-dot { width:5px; height:5px; border-radius:50%; background:var(--good); box-shadow:0 0 12px var(--good); }
+    .hero-copy h1 { font-size:clamp(3.4rem,7.4vw,7.6rem); line-height:.82; letter-spacing:-.075em; margin:0 0 1.4rem; }
+    .hero-copy h1 .typed-title { min-width:0; }
+    .hero-copy h1 .typed-line { white-space:nowrap; }
+    .hero-copy h1 .stroke { -webkit-text-stroke:1.35px rgba(56,189,248,.82); }
+    .hero-role { color:#e7f2ff; font:600 clamp(1rem,1.5vw,1.25rem)/1.4 "Space Grotesk",sans-serif; margin-bottom:.85rem; }
+    .hero-role span { color:var(--blue); padding-inline:.25rem; }
+    .hero-intro { max-width:570px; margin:0; color:#9fb4d0; font-size:clamp(.95rem,1.2vw,1.08rem); line-height:1.85; }
+    .hero-specialties { display:flex; align-items:center; flex-wrap:wrap; gap:.7rem; margin-top:1.35rem; color:#7f96b6; font-size:.72rem; letter-spacing:.035em; }
+    .hero-specialties i { width:3px; height:3px; border-radius:50%; background:var(--blue); opacity:.8; }
+    .hero-cta { margin-top:1.8rem; gap:.75rem; }
+    .hero-cta .btn { min-height:48px; padding-inline:1.25rem; border-radius:999px; }
+    .hero-cta .btn span { transition:transform 350ms var(--spring); }
+    .hero-cta .btn:hover span { transform:translate(3px,-2px); }
+    .hero-stack { display:flex; align-items:center; flex-wrap:wrap; gap:.55rem; margin-top:2.3rem; padding-top:1.15rem; border-top:1px solid rgba(122,157,214,.15); }
+    .hero-stack-label { color:#58718f; font:600 .58rem "Space Grotesk",sans-serif; letter-spacing:.16em; margin-right:.35rem; }
+    .hero-stack span:not(.hero-stack-label) { color:#9eb4d0; border:1px solid rgba(122,157,214,.18); background:rgba(8,17,30,.42); padding:.35rem .62rem; border-radius:999px; font:500 .65rem "Space Grotesk",sans-serif; transition:color 300ms ease,border-color 300ms ease,background 300ms ease,transform 400ms var(--spring); }
+    .hero-stack span:not(.hero-stack-label):hover { color:var(--good); border-color:rgba(56,189,248,.48); background:rgba(14,165,233,.09); transform:translateY(-3px); }
+    .hero-visual { width:min(100%,510px); justify-self:end; min-height:540px; aspect-ratio:auto; overflow:visible; border:0; border-radius:0; background:transparent; box-shadow:none; isolation:isolate; display:grid; place-items:center; perspective:1100px; animation:heroFloat 9s ease-in-out infinite; }
+    .hero-visual::before { display:none; }
+    .hero-visual::after { display:none; }
+    .hero-glow { position:absolute; width:74%; aspect-ratio:1; border-radius:50%; background:radial-gradient(circle,rgba(14,165,233,.2),rgba(14,165,233,.045) 48%,transparent 72%); filter:blur(18px); z-index:-3; animation:glowBreath 7s ease-in-out infinite alternate; }
+    .hero-orbit { position:absolute; width:88%; aspect-ratio:1; border:1px solid rgba(56,189,248,.2); border-radius:44% 56% 59% 41% / 45% 39% 61% 55%; z-index:-2; pointer-events:none; }
+    .hero-orbit-one { animation:heroAuraMorph 15s ease-in-out infinite alternate,orbitDrift 34s linear infinite; }
+    .hero-orbit-two { width:102%; border-color:rgba(56,189,248,.11); border-radius:50%; transform:rotate(35deg) scaleY(.84); animation:orbitDrift 48s linear infinite reverse; }
+    .avatar-wrap { width:clamp(270px,30vw,370px); max-width:76%; padding:8px; border:1px solid rgba(103,232,249,.75); background:linear-gradient(145deg,rgba(13,33,54,.94),rgba(3,9,18,.96)); box-shadow:0 0 0 8px rgba(56,189,248,.045),0 28px 90px rgba(0,0,0,.48),0 0 70px rgba(14,165,233,.13); transform:translateZ(40px); transition:transform 850ms var(--spring),box-shadow 850ms ease; }
+    .hero-visual:hover .avatar-wrap { transform:translate3d(0,-8px,55px) scale(1.025); box-shadow:0 0 0 13px rgba(56,189,248,.065),0 35px 100px rgba(0,0,0,.52),0 0 85px rgba(14,165,233,.2); }
+    .avatar { object-position:center 38%; }
+    .avatar-tag { max-width:none; overflow:visible; text-overflow:clip; display:flex; align-items:center; gap:.55rem; padding:.65rem .9rem; border-radius:999px; color:#a9efff; font:600 .64rem "Space Grotesk",sans-serif; letter-spacing:.08em; background:rgba(5,14,26,.84); border:1px solid rgba(56,189,248,.3); box-shadow:0 12px 34px rgba(0,0,0,.25),0 0 26px rgba(14,165,233,.08); backdrop-filter:blur(16px); animation:tagFloat 7s ease-in-out infinite; }
+    .avatar-tag.top { top:19%; right:-2%; }
+    .avatar-tag.bottom { bottom:18%; left:-1%; animation-delay:-3.5s; }
+    .tag-pulse { width:6px; height:6px; border-radius:50%; background:var(--good); box-shadow:0 0 10px var(--good); }
+    .hero-index { position:absolute; right:4%; bottom:5%; color:rgba(142,174,209,.42); font:700 .72rem "Space Grotesk",sans-serif; letter-spacing:.16em; }
+    .hero-index span { color:rgba(56,189,248,.6); }
+    .hero-scroll { position:absolute; left:50%; bottom:1.1rem; transform:translateX(-50%); display:flex; align-items:center; gap:.65rem; color:#66809f; text-decoration:none; font:600 .58rem "Space Grotesk",sans-serif; letter-spacing:.2em; }
+    .hero-scroll span { width:1px; height:26px; background:linear-gradient(var(--blue),transparent); transform-origin:top; animation:scrollLine 1.8s ease-in-out infinite; }
+    .hero-copy .hero-kicker,.hero-copy h1,.hero-copy .hero-role,.hero-copy .hero-intro,.hero-copy .hero-specialties,.hero-copy .hero-cta,.hero-copy .hero-stack { animation:heroTextIn 850ms var(--spring) both; }
+    .hero-copy h1 { animation-delay:90ms; }.hero-copy .hero-role { animation-delay:170ms; }.hero-copy .hero-intro { animation-delay:240ms; }.hero-copy .hero-specialties { animation-delay:310ms; }.hero-copy .hero-cta { animation-delay:380ms; }.hero-copy .hero-stack { animation-delay:450ms; }
+    .reveal:not(.on) { clip-path:inset(0 0 8% 0); }
+    .reveal.on { clip-path:inset(0 0 0 0); transition:opacity 850ms ease,transform 1050ms var(--spring),filter 850ms ease,clip-path 1050ms var(--spring); }
+    .motion-wipe { background:linear-gradient(135deg,#050b15 0%,#0b2941 48%,#07111e 100%); }
+    .motion-progress { height:2px; }
+    .magnetic { transition:transform 420ms var(--spring),box-shadow 350ms ease,border-color 250ms ease; }
+    @keyframes heroTextIn { from { opacity:0; transform:translate3d(0,24px,0); filter:blur(8px); } to { opacity:1; transform:translate3d(0,0,0); filter:blur(0); } }
+    @keyframes glowBreath { from { opacity:.55; transform:scale(.92); } to { opacity:1; transform:scale(1.08); } }
+    @keyframes scrollLine { 0%,100% { transform:scaleY(.45); opacity:.55; } 50% { transform:scaleY(1); opacity:1; } }
+    .project-card { view-transition-name:none; }
+    ::view-transition-old(root),::view-transition-new(root) { animation-duration:420ms; }
+    @media (max-width:1080px) {
+      .hero { grid-template-columns:minmax(0,1fr) minmax(280px,.8fr); gap:2rem; }
+      .hero-visual { min-height:440px; }
+      .hero-copy h1 { font-size:clamp(3.2rem,7vw,5.6rem); }
+    }
+    @media (max-width:760px) {
+      #hero { min-height:auto; padding-block:2.4rem 4.2rem; }
+      .hero { min-height:0; grid-template-columns:1fr; gap:1.2rem; padding-block:0; }
+      .hero-visual { grid-row:1; justify-self:center; width:min(100%,390px); min-height:350px; margin:0 auto; }
+      .avatar-wrap { width:clamp(230px,64vw,290px); max-width:76%; }
+      .avatar-tag { font-size:.55rem; padding:.52rem .7rem; }
+      .avatar-tag.top { top:12%; right:0; }
+      .avatar-tag.bottom { bottom:12%; left:0; }
+      .hero-copy { grid-row:2; transform:none; }
+      .hero-copy h1 { font-size:clamp(2.65rem,12.8vw,4.6rem); }
+      .hero-kicker { font-size:.56rem; letter-spacing:.13em; margin-bottom:1.2rem; }
+      .hero-intro { font-size:.94rem; }
+      .hero-stack { margin-top:1.6rem; }
+      .hero-scroll { display:none; }
+      .nav { max-width:58vw; overflow-x:auto; scrollbar-width:none; }
+      .nav::-webkit-scrollbar { display:none; }
+      .nav li:nth-child(n+4) { display:list-item; }
+      .nav a { white-space:nowrap; font-size:.62rem; }
+    }
+    @media (max-width:420px) {
+      .hero-visual { min-height:310px; }
+      .avatar-tag { font-size:.49rem; padding:.45rem .58rem; }
+      .hero-specialties { gap:.45rem; font-size:.65rem; }
+      .hero-stack span:not(.hero-stack-label) { font-size:.58rem; }
+      .hero-cta .btn { width:100%; }
+    }
+    @media (prefers-reduced-motion:reduce) {
+      .hero-visual,.hero-orbit,.hero-glow,.avatar-tag,.hero-scroll span,.hero-copy .hero-kicker,.hero-copy h1,.hero-copy .hero-role,.hero-copy .hero-intro,.hero-copy .hero-specialties,.hero-copy .hero-cta,.hero-copy .hero-stack { animation:none !important; }
+      .reveal:not(.on),.reveal.on { opacity:1; transform:none; filter:none; clip-path:none; }
+      .hero-visual:hover .avatar-wrap { transform:none; }
+    }
+
   </style>
   <script type="application/ld+json">
   {
@@ -1623,57 +1715,46 @@
   </header>
 
   <main>
-    <section id="hero">
+    <section id="hero" aria-labelledby="hero-title">
       <div class="container hero">
         <div class="hero-copy reveal">
-          <h1 aria-label="Kumaresan Kanthasamy - AI Engineer &amp; Agentic AI Developer">
+          <div class="hero-kicker"><span class="hero-kicker-line"></span> SOFTWARE ENGINEER <span class="hero-kicker-dot"></span> CHENNAI, INDIA</div>
+          <h1 id="hero-title" aria-label="Kumaresan Kanthasamy">
             <span class="typed-title" id="typedTitle" data-line-one="KUMARESAN" data-line-two="KANTHASAMY">
               <span class="typed-line" data-typed-line="one"></span>
               <span class="typed-line stroke" data-typed-line="two"></span>
             </span>
           </h1>
-          <div class="roles">
-            <span class="role-chip">Associate Software Developer</span>
-            <span class="role-chip">Backend &amp; Cloud Engineer</span>
-            <span class="role-chip">AI Systems Developer</span>
+          <div class="hero-role">Associate Software Developer <span>·</span> Backend &amp; Cloud Engineer</div>
+          <p class="hero-intro">I build dependable backend systems and cloud-powered products — turning complex workflows into software that feels simple, fast, and reliable.</p>
+          <div class="hero-specialties" aria-label="Areas of focus">
+            <span>Backend engineering</span><i></i><span>Cloud infrastructure</span><i></i><span>Healthcare technology</span>
           </div>
-
-          <div class="code-box">
-            <div class="code-head">
-              <span class="light r"></span>
-              <span class="light y"></span>
-              <span class="light g"></span>
-              <span class="filename">kumaresan.py</span>
-            </div>
-            <div class="code-body" id="introCode" aria-label="kumaresan.py typing intro">
-              <div class="code-row" data-code-line="1"></div>
-              <div class="code-row" data-code-line="2"></div>
-              <div class="code-row" data-code-line="3"></div>
-              <div class="code-row" data-code-line="4"></div>
-              <div class="code-row" data-code-line="5"></div>
-              <div class="code-row" data-code-line="6"></div>
-              <div class="code-row" data-code-line="7"></div>
-              <div class="code-row" data-code-line="8"></div>
-              <div class="code-row" data-code-line="9"></div>
-            </div>
-          </div>
-
           <div class="hero-cta">
-            <a href="Kumaresan.pdf" download class="btn btn-primary">Download Resume</a>
-            <a href="#projects" class="btn btn-ghost">View Projects</a>
+            <a href="Kumaresan.pdf" download class="btn btn-primary magnetic">Download Resume <span aria-hidden="true">↗</span></a>
+            <a href="#projects" class="btn btn-ghost magnetic">Explore Projects <span aria-hidden="true">↓</span></a>
+          </div>
+          <div class="hero-stack" aria-label="Core technology stack">
+            <span class="hero-stack-label">CORE STACK</span>
+            <span>TypeScript</span><span>Node.js</span><span>NestJS</span><span>PostgreSQL</span><span>AWS</span>
           </div>
         </div>
 
-        <div class="hero-visual reveal" data-parallax>
+        <div class="hero-visual reveal" aria-label="Portrait of Kumaresan">
+          <div class="hero-orbit hero-orbit-one" aria-hidden="true"></div>
+          <div class="hero-orbit hero-orbit-two" aria-hidden="true"></div>
+          <div class="hero-glow" aria-hidden="true"></div>
           <div class="avatar-wrap">
             <img src="Kumaresan K.jpg"
-              alt="Kumaresan Kanthasamy - Associate Software Developer and Backend Engineer based in Chennai, India" loading="eager"
+              alt="Kumaresan Kanthasamy, Associate Software Developer and Backend Engineer" loading="eager"
               class="avatar" />
           </div>
-          <div class="avatar-tag top">Node.js · TypeScript</div>
-          <div class="avatar-tag bottom">AWS · PostgreSQL</div>
+          <div class="avatar-tag top"><span class="tag-pulse"></span> NODE.JS · TYPESCRIPT</div>
+          <div class="avatar-tag bottom">AWS · POSTGRESQL</div>
+          <div class="hero-index" aria-hidden="true">KK<span> / 26</span></div>
         </div>
       </div>
+      <a class="hero-scroll" href="#about" aria-label="Scroll to about section"><span></span> SCROLL TO EXPLORE</a>
     </section>
 
     <section id="about">
@@ -2364,7 +2445,7 @@
           { ln: "5", segments: [{ text: "    focus = " }, { cls: "str", text: '"building reliable, production-ready software"' }] },
           { ln: "6", segments: [] },
           { ln: "7", segments: [{ text: "    " }, { cls: "kw", text: "def" }, { text: " " }, { cls: "id", text: "build" }, { text: "(self):" }] },
-          { ln: "8", segments: [{ text: "        " }, { cls: "kw", text: "return" }, { text: " " }, { cls: "str", text: '"AI products that solve real-world problems"' }] },
+          { ln: "8", segments: [{ text: "        " }, { cls: "kw", text: "return" }, { text: " " }, { cls: "str", text: '"reliable backend systems and cloud products"' }] },
           { ln: "9", segments: [{ text: "    " }], terminal: true }
         ];
         const codeRows = [...introCode.querySelectorAll("[data-code-line]")];
@@ -2613,10 +2694,17 @@
           const filter = btn.dataset.filter;
           tabs.querySelectorAll(".tab-btn").forEach((b) => b.classList.remove("active"));
           btn.classList.add("active");
-          cards.forEach((card) => {
-            card.hidden = !(filter === "all" || card.dataset.group === filter);
-          });
-          updateTopicVisibility();
+          const applyFilter = () => {
+            cards.forEach((card) => {
+              card.hidden = !(filter === "all" || card.dataset.group === filter);
+            });
+            updateTopicVisibility();
+          };
+          if (!prefersReducedMotion && document.startViewTransition) {
+            document.startViewTransition(applyFilter);
+          } else {
+            applyFilter();
+          }
         });
       }
       updateTopicVisibility();
@@ -2663,6 +2751,20 @@
           card.style.removeProperty("--my");
         });
       });
+
+
+      // Small magnetic response on primary actions; disabled for touch and reduced-motion users.
+      if (!prefersReducedMotion && window.matchMedia("(pointer:fine)").matches) {
+        document.querySelectorAll(".magnetic").forEach((button) => {
+          button.addEventListener("pointermove", (event) => {
+            const rect = button.getBoundingClientRect();
+            const dx = (event.clientX - rect.left - rect.width / 2) * 0.08;
+            const dy = (event.clientY - rect.top - rect.height / 2) * 0.12;
+            button.style.transform = `translate3d(${dx.toFixed(1)}px,${dy.toFixed(1)}px,0)`;
+          });
+          button.addEventListener("pointerleave", () => { button.style.transform = ""; });
+        });
+      }
 
       // Premium motion helpers: scroll progress and short, accessible anchor wipes.
       const progress = document.createElement("div");

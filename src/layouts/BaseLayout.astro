@@ -1,6 +1,6 @@
 ---
-import "../styles/global.css";
-import "../styles/cinema.css";
+import "../styles/clean.css";
+import NetworkBackground from "../components/NetworkBackground.tsx";
 
 const {
   title = "Kumaresan Kanthasamy — Backend & Cloud Systems Engineer",
@@ -12,14 +12,14 @@ const {
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="theme-color" content="#05080e" />
+    <meta name="theme-color" content="#090d14" />
     <meta name="description" content={description} />
     <meta name="author" content="Kumaresan Kanthasamy" />
     <link rel="canonical" href="https://kumaresan.is-a.dev/" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500;600&family=Manrope:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet" />
-    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22 fill=%22%2338e1f0%22>K</text></svg>" />
+    <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500;600&family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet" />
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22 fill=%22%2338bdf8%22>K</text></svg>" />
     <meta property="og:type" content="website" />
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
@@ -28,17 +28,17 @@ const {
     <title>{title}</title>
   </head>
   <body>
-    <!-- 3D Backend Network & Telemetry Canvas -->
-    <canvas id="webgl-canvas" class="webgl-canvas" aria-hidden="true"></canvas>
+    <!-- Top Scroll Progress Indicator -->
+    <div class="scroll-progress-bar" aria-hidden="true"></div>
 
-    <div class="noise" aria-hidden="true"></div>
+    <!-- Software Engineer Distributed Network & Data Flow Background Animation -->
+    <NetworkBackground client:load />
 
-    <!-- Pinned Cinema Stage and Virtual Scroll Track -->
     <slot />
 
     <script>
-      import { initCinema } from "../animations/cinema";
-      initCinema();
+      import { initSmoothScroll } from "../animations/smoothScroll";
+      initSmoothScroll();
     </script>
   </body>
 </html>

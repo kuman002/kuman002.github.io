@@ -66,337 +66,316 @@ const skillGroups = [
   { name: "Cloud & DevSecOps", items: ["AWS Lambda", "AWS Cognito", "API Gateway", "RDS", "Docker", "S3", "AES-256-GCM"] },
   { name: "Applied AI & Systems", items: ["LangGraph", "ChromaDB", "RAG Systems", "Playwright ETL", "NLP (Vosk)", "Git"] }
 ];
-
-const systemTabs = [
-  { idx: 0, num: "00", name: "ORIGIN" },
-  { idx: 1, num: "01", name: "ABOUT" },
-  { idx: 2, num: "02", name: "EXPERIENCE" },
-  { idx: 3, num: "03", name: "STACK" },
-  { idx: 4, num: "04", name: "PROJECTS" },
-  { idx: 5, num: "05", name: "CONTACT" },
-];
 ---
 <BaseLayout>
-  <!-- Top Apex Sensor Readout -->
-  <header class="orbit-apex-sensor" aria-label="3D System cluster telemetry">
-    <span class="live-pulse" aria-hidden="true"></span>
-    <span id="apex-node-name">NODE 00: ORIGIN // [API_GATEWAY]</span>
+  <!-- Clean Sticky Navigation Header -->
+  <header class="nav-header">
+    <div class="container nav-container">
+      <a href="#hero" class="nav-logo" aria-label="Kumaresan Kanthasamy Homepage">
+        <span class="logo-badge">KK</span>
+        <span>Kumaresan K.</span>
+      </a>
+      <nav aria-label="Main Navigation">
+        <ul class="nav-links">
+          <li><a href="#about">About</a></li>
+          <li><a href="#experience">Experience</a></li>
+          <li><a href="#projects">Projects</a></li>
+          <li><a href="#skills">Skills</a></li>
+          <li><a href="#contact">Contact</a></li>
+        </ul>
+      </nav>
+      <a href="Kumaresan.pdf" target="_blank" rel="noopener" class="nav-cta">
+        <span>Résumé</span>
+        <span aria-hidden="true">↗</span>
+      </a>
+    </div>
   </header>
 
-  <!-- 3D System Viewport Stage (Inside this 3D system, tabs shift one by one) -->
-  <main class="cinema-viewport">
-    <div class="cinema-world">
+  <main>
+    <!-- Hero Section -->
+    <section id="hero" class="hero-section">
+      <div class="container hero-grid">
+        <div class="hero-content reveal-item">
+          <div class="status-pill">
+            <span class="status-dot"></span>
+            <span>Available for Backend & Cloud Roles</span>
+          </div>
+          <h1 class="hero-title">
+            Engineering reliable backends & cloud architectures.
+          </h1>
+          <p class="hero-subtitle">
+            Associate Software Developer · India
+          </p>
+          <p class="hero-description">
+            I'm Kumaresan — a backend engineer building resilient cloud architectures, high-concurrency microservices, and zero-trust encrypted database systems with TypeScript, Node.js, PostgreSQL, and AWS.
+          </p>
+          <div class="hero-actions">
+            <a href="#contact" class="btn btn-primary">
+              <span>Start a conversation</span>
+              <span aria-hidden="true">→</span>
+            </a>
+            <a href="Kumaresan.pdf" target="_blank" rel="noopener" class="btn btn-secondary">
+              <span>View Résumé</span>
+              <span aria-hidden="true">↗</span>
+            </a>
+            <a href="https://github.com/kuman002" target="_blank" rel="noopener" class="btn btn-ghost">
+              <span>GitHub</span>
+              <span aria-hidden="true">↗</span>
+            </a>
+            <a href="https://www.linkedin.com/in/kumaresan-k-4289452b4" target="_blank" rel="noopener" class="btn btn-ghost">
+              <span>LinkedIn</span>
+              <span aria-hidden="true">↗</span>
+            </a>
+          </div>
+        </div>
 
-      <!-- TAB 0: ORIGIN / HERO -->
-      <section class="cinema-scene is-active" id="scene-hero" aria-label="Origin node tab">
-        <div class="scene-container">
-          <div class="cinema-card">
-            <div class="card-header">
-              <div class="dots">
-                <span class="dot-r"></span>
-                <span class="dot-y"></span>
-                <span class="dot-g"></span>
-              </div>
-              <div class="tag">
-                <b>NODE 00</b>
-                <span>ORIGIN // [API_GATEWAY]</span>
-              </div>
-              <div class="telemetry">CLUSTER ONLINE · 60 FPS</div>
-            </div>
-            <div class="card-body">
-              <div class="hero-scene-grid">
-                <div>
-                  <div class="hero-tagline">
-                    <span class="dot"></span>
-                    <span>ASSOCIATE SOFTWARE DEVELOPER · INDIA</span>
-                  </div>
-                  <h1 class="hero-h1">
-                    <span>Engineering</span>
-                    <span class="outline">what's next<em>.</em></span>
-                  </h1>
-                  <p class="hero-bio">
-                    I'm Kumaresan — a backend engineer building resilient cloud architectures, high-concurrency microservices, and zero-trust encrypted database systems.
-                  </p>
-                  <div class="hero-buttons">
-                    <a class="c-btn c-btn-primary" href="#scene-experience">Explore Architecture <span>↘</span></a>
-                    <a class="c-btn c-btn-quiet" href="Kumaresan.pdf" target="_blank" rel="noopener">View Résumé <span>↗</span></a>
-                  </div>
-                </div>
-
-                <div class="hero-art-box">
-                  <div class="hero-floating-pill pill-1">{" runtime: 'node@22' "}</div>
-                  <div class="hero-floating-pill pill-2">⚡ AWS LAMBDA & RDS</div>
-                  <div class="hero-floating-pill pill-3">AES-256-GCM · ZERO-TRUST</div>
-                  <div class="hero-portrait">
-                    <img src="/Kumaresan%20K.jpg" alt="Portrait of Kumaresan Kanthasamy" fetchpriority="high" />
-                  </div>
-                </div>
-              </div>
+        <div class="hero-visual reveal-item stagger-2">
+          <div class="portrait-wrapper">
+            <img src="/Kumaresan%20K.jpg" alt="Portrait of Kumaresan Kanthasamy" fetchpriority="high" />
+            <div class="portrait-tag">
+              <span>KUMARESAN K.</span>
+              <span>BACKEND ENG</span>
             </div>
           </div>
         </div>
-      </section>
+      </div>
+    </section>
 
-      <!-- TAB 1: ABOUT ME -->
-      <section class="cinema-scene" id="scene-about" aria-label="About node tab">
-        <div class="scene-container">
-          <div class="cinema-card">
-            <div class="card-header">
-              <div class="dots">
-                <span class="dot-r"></span>
-                <span class="dot-y"></span>
-                <span class="dot-g"></span>
+    <!-- Key Metrics / System Highlights -->
+    <section class="metrics-section" aria-label="Engineering Performance Metrics">
+      <div class="container">
+        <div class="metrics-grid">
+          <div class="metric-card reveal-item stagger-1">
+            <div class="metric-val">99.99%</div>
+            <div class="metric-lbl">Uptime Target</div>
+            <div class="metric-desc">Cloud-native architectures engineered for fault-tolerant operation</div>
+          </div>
+          <div class="metric-card reveal-item stagger-2">
+            <div class="metric-val">&lt; 35ms</div>
+            <div class="metric-lbl">p99 Latency</div>
+            <div class="metric-desc">Optimized SQL query paths and Redis caching layers</div>
+          </div>
+          <div class="metric-card reveal-item stagger-3">
+            <div class="metric-val">AES-256</div>
+            <div class="metric-lbl">Zero-Trust</div>
+            <div class="metric-desc">Application-level envelope cipher & blind index search</div>
+          </div>
+          <div class="metric-card reveal-item stagger-4">
+            <div class="metric-val">7+ Systems</div>
+            <div class="metric-lbl">Shipped</div>
+            <div class="metric-desc">Production platforms, agentic AI backends, and data ETL pipelines</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Experience Section -->
+    <section id="experience" class="section-block">
+      <div class="container">
+        <div class="section-head reveal-item">
+          <p class="section-eyebrow">Career & Production Experience</p>
+          <h2 class="section-title">Where I've built.</h2>
+        </div>
+
+        <div class="exp-timeline">
+          <!-- Experience Item 1 -->
+          <article class="exp-card reveal-item">
+            <div class="exp-card-header">
+              <div>
+                <h3 class="exp-role">Serverless Backend Architecture & Cloud Systems</h3>
+                <div class="exp-company">Meyi Cloud Solutions Private Limited · Associate Software Developer</div>
               </div>
-              <div class="tag">
-                <b>NODE 01</b>
-                <span>PROFILE // [AUTH_COGNITO]</span>
-              </div>
-              <div class="telemetry">PASSIVE · 0 LATENCY</div>
+              <span class="exp-badge">Proprietary System</span>
             </div>
-            <div class="card-body">
-              <div class="scene-header">
-                <p class="scene-eyebrow">01 / A LITTLE ABOUT ME</p>
-                <h2 class="scene-title">Curious by nature, <em>engineer by craft.</em></h2>
+            <ul class="exp-points">
+              <li>Engineered AWS Cognito authentication flows covering user registration, SMS/email OTP verification, and hardened JWT token parsing for stateless session management.</li>
+              <li>Architected application-level data encryption using AES-256-GCM combined with HMAC-SHA256 blind indexing to store and search sensitive patient and customer records safely inside AWS RDS PostgreSQL.</li>
+              <li>Constructed high-throughput ticket management microservices with Drizzle ORM and PostgreSQL, pushing complex state validations directly into the database engine via SQL CASE expressions and NULL-safe <code>IS DISTINCT FROM</code> clauses.</li>
+              <li>Standardized API Gateway JSON Schema validation contracts and packaged common utilities into reusable AWS Lambda Layers.</li>
+            </ul>
+            <div class="tech-tags">
+              <span class="tech-tag">TypeScript</span>
+              <span class="tech-tag">Node.js</span>
+              <span class="tech-tag">AWS Lambda</span>
+              <span class="tech-tag">AWS Cognito</span>
+              <span class="tech-tag">PostgreSQL</span>
+              <span class="tech-tag">Drizzle ORM</span>
+              <span class="tech-tag">AES-256-GCM</span>
+            </div>
+          </article>
+
+          <!-- Experience Item 2 -->
+          <article class="exp-card reveal-item">
+            <div class="exp-card-header">
+              <div>
+                <h3 class="exp-role">Healthcare RIS/PACS Platform (7XT RIS/PACS)</h3>
+                <div class="exp-company">Meyi Cloud Solutions Private Limited · Sanitized Case Study</div>
               </div>
-              <div class="about-cinema-grid">
-                <div class="about-cinema-text">
-                  <p>I enjoy understanding how systems operate at scale, finding clean abstractions, and turning complex product requirements into dependable backend architectures.</p>
-                  <p>My work centers around designing event-driven microservices, cloud-native deployments on AWS, and PostgreSQL schemas with zero-trust database encryption.</p>
-                  <p>Outside production work, I experiment across distributed systems, agentic workflows, database triggers, and applied AI assistants.</p>
-                  <a class="c-btn c-btn-quiet" href="Kumaresan.pdf" target="_blank" rel="noopener">A little more on my résumé <span>↗</span></a>
-                </div>
-                <div class="about-metrics">
-                  <div class="metric-box">
-                    <div class="metric-val">99.99%</div>
-                    <div class="metric-lbl">UPTIME TARGETS</div>
-                  </div>
-                  <div class="metric-box">
-                    <div class="metric-val">&lt; 35ms</div>
-                    <div class="metric-lbl">p99 API LATENCY</div>
-                  </div>
-                  <div class="metric-box">
-                    <div class="metric-val">AES-256</div>
-                    <div class="metric-lbl">ZERO-LEAK CIPHER</div>
-                  </div>
-                  <div class="metric-box">
-                    <div class="metric-val">0 DRIFT</div>
-                    <div class="metric-lbl">SCHEMA CONTRACTS</div>
-                  </div>
-                </div>
+              <span class="exp-badge">Healthcare Platform</span>
+            </div>
+            <ul class="exp-points">
+              <li>Designed backend RESTful APIs orchestrating multi-modality patient appointments, radiologist study worklists, and structured diagnostic reporting pipelines.</li>
+              <li>Ensured clinical data consistency across multi-tenant hospital environments through transactional PostgreSQL schemas, database constraints, and DICOM metadata tagging.</li>
+              <li>Packaged modular backend services into Docker containers, optimized complex relational queries for high-volume imaging records, and monitored operational health metrics on AWS.</li>
+            </ul>
+            <div class="tech-tags">
+              <span class="tech-tag">TypeScript</span>
+              <span class="tech-tag">NestJS</span>
+              <span class="tech-tag">PostgreSQL</span>
+              <span class="tech-tag">AWS</span>
+              <span class="tech-tag">Docker</span>
+              <span class="tech-tag">DICOM</span>
+              <span class="tech-tag">Microservices</span>
+            </div>
+          </article>
+
+          <!-- Education -->
+          <article class="exp-card reveal-item">
+            <div class="exp-card-header">
+              <div>
+                <h3 class="exp-role">B.E. — Computer Science & Engineering</h3>
+                <div class="exp-company">Annamalai University · 2021 — 2025 · Data Science Specialization</div>
               </div>
+              <span class="exp-badge">Education</span>
+            </div>
+            <p style="color: var(--text-muted); font-size: 0.95rem; margin-top: 0.5rem;">
+              Core coursework completed across distributed systems, database management systems, algorithms, and applied machine learning.
+            </p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- Projects Section -->
+    <section id="projects" class="section-block">
+      <div class="container">
+        <div class="section-head reveal-item">
+          <p class="section-eyebrow">Open Source & Personal Work</p>
+          <h2 class="section-title">Engineered projects.</h2>
+        </div>
+
+        <div class="projects-grid">
+          {projects.map((p, idx) => (
+            <a class={`project-card reveal-item stagger-${(idx % 4) + 1}`} href={p.url} target="_blank" rel="noopener noreferrer">
+              <div>
+                <div class="project-card-top">
+                  <span class="project-category">{p.type}</span>
+                  <span class="project-arrow-icon" aria-hidden="true">↗</span>
+                </div>
+                <h3 class="project-title">{p.name}</h3>
+                <p class="project-desc">{p.desc}</p>
+              </div>
+              <div class="tech-tags" style="margin-top: 0; padding-top: 1rem;">
+                {p.stack.map((item) => <span class="tech-tag">{item}</span>)}
+              </div>
+            </a>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <!-- Skills Section -->
+    <section id="skills" class="section-block">
+      <div class="container">
+        <div class="section-head reveal-item">
+          <p class="section-eyebrow">Technical Capabilities</p>
+          <h2 class="section-title">Core toolkit.</h2>
+        </div>
+
+        <div class="skills-grid">
+          {skillGroups.map((group, idx) => (
+            <div class={`skill-category-card reveal-item stagger-${idx + 1}`}>
+              <h3 class="skill-cat-title">
+                <span>{group.name}</span>
+                <span>0{idx + 1}</span>
+              </h3>
+              <div class="skill-pills">
+                {group.items.map((item) => <span class="skill-pill">{item}</span>)}
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <!-- About Section -->
+    <section id="about" class="section-block">
+      <div class="container">
+        <div class="section-head reveal-item">
+          <p class="section-eyebrow">Engineering Background</p>
+          <h2 class="section-title">About my work.</h2>
+        </div>
+
+        <div class="about-grid">
+          <div class="about-text reveal-item">
+            <p>
+              I enjoy understanding how software operates under high concurrency, designing clean abstractions, and turning complex product requirements into dependable, low-latency backend architectures.
+            </p>
+            <p>
+              My primary focus centers on event-driven microservices, cloud deployments on AWS, and PostgreSQL schemas protected by zero-trust database encryption. I care deeply about strict data integrity, zero-drift contracts, and deterministic performance.
+            </p>
+            <p>
+              Outside production responsibilities, I experiment with distributed systems, LangGraph agentic workflows, Change Data Capture (CDC) pipelines, and applied AI tools.
+            </p>
+            <div>
+              <a href="Kumaresan.pdf" target="_blank" rel="noopener" class="btn btn-secondary" style="margin-top: 0.5rem;">
+                <span>Read detailed résumé</span>
+                <span aria-hidden="true">↗</span>
+              </a>
+            </div>
+          </div>
+
+          <div class="about-sidebar reveal-item stagger-2">
+            <div class="about-fact-card">
+              <h4>System Reliability</h4>
+              <p>Designing for graceful failure, circuit breaking, idempotency, and clean database transaction boundaries.</p>
+            </div>
+            <div class="about-fact-card">
+              <h4>Zero-Trust Security</h4>
+              <p>Application-level cryptography with AES-256-GCM and blind indexes to safeguard sensitive customer and healthcare records.</p>
+            </div>
+            <div class="about-fact-card">
+              <h4>Modern Backend Stack</h4>
+              <p>TypeScript, Node.js, NestJS, FastAPI, PostgreSQL, Redis BullMQ queues, Docker, and AWS Serverless.</p>
             </div>
           </div>
         </div>
-      </section>
+      </div>
+    </section>
 
-      <!-- TAB 2: EXPERIENCE -->
-      <section class="cinema-scene" id="scene-experience" aria-label="Experience node tab">
-        <div class="scene-container">
-          <div class="cinema-card">
-            <div class="card-header">
-              <div class="dots">
-                <span class="dot-r"></span>
-                <span class="dot-y"></span>
-                <span class="dot-g"></span>
-              </div>
-              <div class="tag">
-                <b>NODE 02</b>
-                <span>PRODUCTION // [LAMBDA_CLUSTER]</span>
-              </div>
-              <div class="telemetry">VERIFIED // AUDITED</div>
-            </div>
-            <div class="card-body">
-              <div class="scene-header">
-                <p class="scene-eyebrow">02 / THE JOURNEY</p>
-                <h2 class="scene-title">Building with <em>purpose.</em></h2>
-              </div>
-              <div class="exp-cinema-list">
-                <!-- Entry 01: Serverless Backend Architecture -->
-                <div class="exp-cinema-card">
-                  <div class="exp-badge">Company Project · Proprietary</div>
-                  <h3 class="exp-title">Serverless Backend Architecture & Cloud Systems</h3>
-                  <div class="exp-company">MEYI CLOUD SOLUTIONS PRIVATE LIMITED · ASSOCIATE SOFTWARE DEVELOPER</div>
-                  <ul>
-                    <li>Engineered AWS Cognito authentication flows covering user registration, SMS/email OTP verification, and hardened JWT token parsing for stateless session management.</li>
-                    <li>Architected application-level data encryption using AES-256-GCM combined with HMAC-SHA256 blind indexing to store and search sensitive patient and customer records safely inside AWS RDS PostgreSQL.</li>
-                    <li>Constructed high-throughput ticket management microservices with Drizzle ORM and PostgreSQL, pushing complex state validations directly into the database engine via SQL CASE expressions and NULL-safe <code>IS DISTINCT FROM</code> clauses.</li>
-                    <li>Standardized API Gateway JSON Schema validation contracts and packaged common utilities into reusable AWS Lambda Layers.</li>
-                  </ul>
-                  <div class="c-tag-list">
-                    <span>TypeScript</span><span>Node.js</span><span>AWS Lambda</span><span>AWS Cognito</span><span>PostgreSQL</span><span>Drizzle ORM</span><span>AES-256-GCM</span>
-                  </div>
-                </div>
-
-                <!-- Entry 02: Healthcare RIS/PACS -->
-                <div class="exp-cinema-card">
-                  <div class="exp-badge">Company Project · Healthcare Platform</div>
-                  <h3 class="exp-title">Healthcare RIS/PACS Platform (7XT RIS/PACS)</h3>
-                  <div class="exp-company">MEYI CLOUD SOLUTIONS PRIVATE LIMITED · SANITIZED CASE STUDY</div>
-                  <ul>
-                    <li>Designed backend RESTful APIs orchestrating multi-modality patient appointments, radiologist study worklists, and structured diagnostic reporting pipelines.</li>
-                    <li>Ensured clinical data consistency across multi-tenant hospital environments through transactional PostgreSQL schemas, database constraints, and DICOM metadata tagging.</li>
-                    <li>Packaged modular backend services into Docker containers, optimized complex relational queries for high-volume imaging records, and monitored operational health metrics on AWS.</li>
-                  </ul>
-                  <div class="c-tag-list">
-                    <span>TypeScript</span><span>NestJS</span><span>PostgreSQL</span><span>AWS</span><span>Docker</span><span>DICOM</span><span>Microservices</span>
-                  </div>
-                </div>
-
-                <!-- Entry 03: Education -->
-                <div class="exp-cinema-card">
-                  <h3 class="exp-title">B.E. — Computer Science & Engineering</h3>
-                  <div class="exp-company">ANNAMALAI UNIVERSITY · 2021 — 2025 · DATA SCIENCE SPECIALIZATION</div>
-                  <p style="margin: 0; color: #b8ccdb; font-size: 0.95rem;">
-                    Core coursework across distributed computing, database management systems, advanced algorithms, and applied machine learning.
-                  </p>
-                </div>
-              </div>
-            </div>
+    <!-- Contact Section -->
+    <section id="contact" class="section-block">
+      <div class="container">
+        <div class="contact-card reveal-item">
+          <p class="section-eyebrow" style="color: var(--accent);">Get in Touch</p>
+          <h2 class="section-title">Let's build something dependable.</h2>
+          <p>
+            I'm always open to discussing backend engineering challenges, distributed architectures, high-throughput systems, or full-time opportunities.
+          </p>
+          <div class="contact-buttons">
+            <a class="btn btn-primary" href="mailto:kumaresk002@gmail.com">
+              <span>Send an email</span>
+              <span aria-hidden="true">↗</span>
+            </a>
+            <a class="btn btn-secondary" href="https://www.linkedin.com/in/kumaresan-k-4289452b4" target="_blank" rel="noopener">
+              <span>LinkedIn Profile</span>
+              <span aria-hidden="true">↗</span>
+            </a>
+            <a class="btn btn-secondary" href="https://github.com/kuman002" target="_blank" rel="noopener">
+              <span>GitHub Projects</span>
+              <span aria-hidden="true">↗</span>
+            </a>
           </div>
         </div>
-      </section>
-
-      <!-- TAB 3: SKILLS -->
-      <section class="cinema-scene" id="scene-skills" aria-label="Skills toolkit tab">
-        <div class="scene-container">
-          <div class="cinema-card">
-            <div class="card-header">
-              <div class="dots">
-                <span class="dot-r"></span>
-                <span class="dot-y"></span>
-                <span class="dot-g"></span>
-              </div>
-              <div class="tag">
-                <b>NODE 03</b>
-                <span>TOOLKIT // [REDIS_BULLMQ]</span>
-              </div>
-              <div class="telemetry">PRODUCTION READY</div>
-            </div>
-            <div class="card-body">
-              <div class="scene-header">
-                <p class="scene-eyebrow">03 / TOOLS OF THE TRADE</p>
-                <h2 class="scene-title">A practical <em>toolkit.</em></h2>
-              </div>
-              <div class="skills-cinema-grid">
-                {skillGroups.map((group, idx) => (
-                  <div class="skill-cinema-card">
-                    <h3>{group.name} <span>0{idx + 1}</span></h3>
-                    <div class="skill-cinema-pills">
-                      {group.items.map((item) => <span>{item}</span>)}
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <!-- TAB 4: PROJECTS -->
-      <section class="cinema-scene" id="scene-projects" aria-label="Projects node tab">
-        <div class="scene-container">
-          <div class="cinema-card">
-            <div class="card-header">
-              <div class="dots">
-                <span class="dot-r"></span>
-                <span class="dot-y"></span>
-                <span class="dot-g"></span>
-              </div>
-              <div class="tag">
-                <b>NODE 04</b>
-                <span>REPOSITORIES // [PGSQL_PRIMARY]</span>
-              </div>
-              <div class="telemetry">PUBLIC REPOSITORIES</div>
-            </div>
-            <div class="card-body">
-              <div class="scene-header">
-                <p class="scene-eyebrow">04 / OPEN SOURCE & PERSONAL WORK</p>
-                <h2 class="scene-title">Engineered <em>projects.</em></h2>
-              </div>
-              <div class="projects-cinema-grid">
-                {projects.map((p) => (
-                  <a class="project-cinema-card" href={p.url} target="_blank" rel="noopener noreferrer">
-                    <div>
-                      <div class="proj-top">
-                        <span class="proj-num">{p.n}</span>
-                        <span class="proj-arrow">↗</span>
-                      </div>
-                      <h3 class="proj-name">{p.name}</h3>
-                      <p class="proj-desc">{p.desc}</p>
-                    </div>
-                    <div class="c-tag-list">
-                      {p.stack.map((item) => <span>{item}</span>)}
-                    </div>
-                  </a>
-                ))}
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <!-- TAB 5: CONTACT -->
-      <section class="cinema-scene" id="scene-contact" aria-label="Contact node tab">
-        <div class="scene-container">
-          <div class="cinema-card">
-            <div class="card-header">
-              <div class="dots">
-                <span class="dot-r"></span>
-                <span class="dot-y"></span>
-                <span class="dot-g"></span>
-              </div>
-              <div class="tag">
-                <b>NODE 05</b>
-                <span>RESOLUTION // [S3_VAULT_KMS]</span>
-              </div>
-              <div class="telemetry">READY TO CONNECT</div>
-            </div>
-            <div class="card-body">
-              <div class="contact-cinema-wrap">
-                <div class="scene-header">
-                  <p class="scene-eyebrow">05 / RESOLUTION</p>
-                  <h2 class="scene-title">Let's build something <em>dependable.</em></h2>
-                </div>
-                <p>I'm always interested in thoughtful backend challenges, distributed systems, resilient data pipelines, and useful software built well.</p>
-                <div class="contact-cinema-btns">
-                  <a class="c-btn c-btn-primary" href="mailto:kumaresk002@gmail.com">Start a conversation <span>↗</span></a>
-                  <a class="c-btn c-btn-quiet" href="https://www.linkedin.com/in/kumaresan-k-4289452b4" target="_blank" rel="noopener">LinkedIn <span>↗</span></a>
-                  <a class="c-btn c-btn-quiet" href="https://github.com/kuman002" target="_blank" rel="noopener">GitHub <span>↗</span></a>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-    </div>
+      </div>
+    </section>
   </main>
 
-  <!-- 3D System Dock (Bottom System Tabs Switcher) -->
-  <nav class="system-dock" aria-label="Portfolio section navigation">
-    <div class="system-status-indicator">
-      <span class="status-pulse" aria-hidden="true"></span>
-      <span>SYS_CLUSTER // ONLINE</span>
+  <!-- Clean Footer -->
+  <footer class="footer">
+    <div class="container footer-content">
+      <span>© 2026 Kumaresan Kanthasamy · Backend & Cloud Systems Engineer</span>
+      <span>Designed for simplicity, speed & clean performance</span>
     </div>
-
-    <div class="system-tabs" role="group" aria-label="Jump to a section">
-      {systemTabs.map((t) => (
-        <button class={`sys-tab-btn ${t.idx === 0 ? "is-active" : ""}`} data-tab={t.idx} aria-current={t.idx === 0 ? "step" : undefined}>
-          <span class="tab-num">{t.num}</span>
-          <span>{t.name}</span>
-        </button>
-      ))}
-    </div>
-
-    <div class="system-nav-arrows">
-      <button class="sys-arrow-btn prev-btn" aria-label="Previous section">←</button>
-      <span class="sys-counter"><b>01</b> / 06</span>
-      <button class="sys-arrow-btn next-btn" aria-label="Next section">
-        <span class="arrow-label">NEXT</span><span aria-hidden="true">→</span>
-      </button>
-    </div>
-  </nav>
-
-  <!-- Anamorphic Cinematic Lens Flare Streak -->
-  <div class="cinematic-lens-flare" aria-hidden="true"></div>
+  </footer>
 </BaseLayout>

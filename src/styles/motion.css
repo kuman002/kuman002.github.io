@@ -1,0 +1,1 @@
+[data-reveal]{opacity:0;visibility:hidden}.is-visible{opacity:1;visibility:visible}.title-line{will-change:transform}.portrait-frame,.float-label{will-change:transform}.scroll-progress{pointer-events:none}@media(prefers-reduced-motion:reduce){[data-reveal]{opacity:1!important;visibility:visible!important}.title-line,.portrait-frame,.float-label{will-change:auto}}

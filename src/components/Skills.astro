@@ -1,0 +1,16 @@
+---
+import SectionHeading from "./SectionHeading.astro";
+const groups = [
+  {name:"Backend",items:["Node.js","TypeScript","NestJS","REST APIs","Python","FastAPI"]},
+  {name:"Data",items:["PostgreSQL","Redis","Drizzle ORM","Prisma","SQL","Data Analysis"]},
+  {name:"Cloud & DevOps",items:["AWS","Lambda","API Gateway","S3","Docker","Terraform"]},
+  {name:"AI & Engineering",items:["Machine Learning","Deep Learning","LangChain / RAG","Playwright","OpenTelemetry","Git"]}
+];
+---
+<section class="content-section skills-section" id="skills">
+  <div class="section-shell">
+    <SectionHeading index="03" eyebrow="TOOLS OF THE TRADE" title="A practical" accent="toolkit." />
+    <p class="section-lead" data-reveal>Tools are only useful when they help ship reliable software. These are the technologies I work with across application development, data, and cloud infrastructure.</p>
+    <div class="skill-groups">{groups.map((group,i)=><article class="skill-group" data-reveal><div class="skill-group-head"><span>0{i+1}</span><h3>{group.name}</h3></div><div class="skill-cloud">{group.items.map(item=><span>{item}</span>)}</div></article>)}</div>
+  </div>
+</section>

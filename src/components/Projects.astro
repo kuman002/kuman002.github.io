@@ -1,0 +1,15 @@
+---
+import SectionHeading from "./SectionHeading.astro";
+const projects = [
+  {n:"01",type:"AI · PYTHON",name:"M.I.L.O — Offline AI Assistant",desc:"A privacy-centric desktop assistant with voice recognition, NLP, and local task workflows — designed to work without an internet connection.",stack:["Python","Vosk","NLP","Automation"],url:"https://github.com/kuman002/M.I.L.O"},
+  {n:"02",type:"BACKEND · CLOUD",name:"Healthcare Imaging Platform",desc:"Contributing to production backend workflows for a radiology information and imaging platform, with an emphasis on dependable APIs and data integrity.",stack:["TypeScript","NestJS","PostgreSQL","AWS"],url:"https://github.com/kuman002"},
+  {n:"03",type:"DATA SCIENCE · ML",name:"Applied Data Science Work",desc:"Explorations in machine learning, data analysis, and practical model-building from academic and independent work.",stack:["Python","Machine Learning","Pandas","Visualization"],url:"https://github.com/kuman002"},
+  {n:"04",type:"ENGINEERING · WEB",name:"Developer Portfolio",desc:"A personal portfolio rebuilt around component-driven architecture, accessible interactions, and scroll-linked motion.",stack:["Astro","TypeScript","GSAP","CSS"],url:"https://github.com/kuman002/kuman002.github.io"}
+];
+---
+<section class="content-section projects-section" id="projects">
+  <div class="section-shell">
+    <SectionHeading index="04" eyebrow="SELECTED WORK" title="Things I've" accent="built." />
+    <div class="project-list">{projects.map((project)=><a class="project-row" href={project.url} target="_blank" rel="noopener noreferrer" data-reveal><span class="project-number">{project.n}</span><div class="project-main"><p class="eyebrow">{project.type}</p><h3>{project.name}</h3><p>{project.desc}</p><div class="tag-list">{project.stack.map(item=><span>{item}</span>)}</div></div><span class="project-arrow">↗</span></a>)}</div>
+  </div>
+</section>

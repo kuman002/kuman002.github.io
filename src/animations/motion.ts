@@ -23,6 +23,27 @@ export function initMotion() {
   gsap.to(".float-label", { y: -12, duration: 2.8, stagger: .3, repeat: -1, yoyo: true, ease: "sine.inOut" });
   gsap.to(".hero-art", { yPercent: 13, ease: "none", scrollTrigger: { trigger: ".hero", start: "top top", end: "bottom top", scrub: 1 } });
 
+  // Scroll-driven section transitions: each chapter wipes into view as it
+  // approaches the viewport, then settles into place. Scrubbing keeps the
+  // transition tied to the user's scroll position in both directions.
+  gsap.utils.toArray<HTMLElement>("main > section:not(.hero)").forEach((section) => {
+    gsap.fromTo(section,
+      { clipPath: "inset(10% 0% 0% 0% round 28px)", scale: 0.965, y: 64, transformOrigin: "center top" },
+      {
+        clipPath: "inset(0% 0% 0% 0% round 0px)",
+        scale: 1,
+        y: 0,
+        ease: "none",
+        scrollTrigger: {
+          trigger: section,
+          start: "top bottom",
+          end: "top 38%",
+          scrub: 1.1
+        }
+      }
+    );
+  });
+
   document.querySelectorAll<HTMLElement>("[data-reveal]").forEach((element) => {
     gsap.fromTo(element, { y: 42, autoAlpha: 0 }, {
       y: 0, autoAlpha: 1, duration: .9, ease: "power3.out",

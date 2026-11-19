@@ -1,6 +1,6 @@
 # Kumaresan — Portfolio
 
-A component-driven portfolio built with Astro, TypeScript, GSAP, and ScrollTrigger.
+A static portfolio built with Astro, TypeScript, Lenis smooth scrolling, and a React canvas background.
 
 ## Local development
 
@@ -20,7 +20,7 @@ The build script copies the existing portrait, résumé, CNAME, robots.txt, and 
 
 ## Motion system
 
-- GSAP timelines for the hero entrance and organic SVG morph.
-- ScrollTrigger for scroll-linked reveals, parallax, timeline progress, and reading progress.
-- Pointer interactions are limited to fine pointers.
-- Reduced-motion preferences disable the motion choreography.
+- Lenis for smooth scrolling, the reading-progress bar, and anchor navigation.
+- IntersectionObserver for scroll reveals.
+- `NetworkBackground.tsx` draws the animated canvas background. It hydrates on idle, drops to ~30fps after 1.5s without input, and pauses in hidden tabs.
+- With reduced motion enabled, the reveal animations are skipped and the canvas redraws only on scroll, pointer or resize.

@@ -287,8 +287,9 @@ export const NetworkBackground: React.FC = () => {
     const canvas = canvasRef.current;
     if (!canvas) return;
 
-    const ctx = canvas.getContext("2d");
-    if (!ctx) return;
+    const maybeCtx = canvas.getContext("2d");
+    if (!maybeCtx) return;
+    const ctx = maybeCtx; // non-null const so nested functions keep the narrowing
 
     const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
@@ -296,6 +297,18 @@ export const NetworkBackground: React.FC = () => {
     let height = 0;
     let animationId = 0;
     let isVisible = !document.hidden;
+    let lastInteraction = performance.now();
+    let lastDraw = 0;
+
+    function schedule() {
+      if (!animationId && isVisible) animationId = requestAnimationFrame(render);
+    }
+
+    // Full frame rate while the user scrolls/points; reduced motion only redraws on these events.
+    function wake() {
+      lastInteraction = performance.now();
+      schedule();
+    }
 
     // Smooth scroll interpolation
     let scrollTarget = window.scrollY;
@@ -303,6 +316,7 @@ export const NetworkBackground: React.FC = () => {
 
     function handleScroll() {
       scrollTarget = window.scrollY;
+      wake();
     }
     window.addEventListener("scroll", handleScroll, { passive: true });
 
@@ -322,6 +336,7 @@ export const NetworkBackground: React.FC = () => {
       mouse.y = e.clientY;
       mouse.targetX = (e.clientX / window.innerWidth - 0.5) * 18;
       mouse.targetY = (e.clientY / window.innerHeight - 0.5) * 14;
+      wake();
     }
 
     function handleMouseLeave() {
@@ -329,6 +344,7 @@ export const NetworkBackground: React.FC = () => {
       mouse.y = -1000;
       mouse.targetX = 0;
       mouse.targetY = 0;
+      wake();
     }
 
     function handleTouch(e: TouchEvent) {
@@ -336,6 +352,7 @@ export const NetworkBackground: React.FC = () => {
         mouse.x = e.touches[0].clientX;
         mouse.y = e.touches[0].clientY;
       }
+      wake();
     }
 
     window.addEventListener("mousemove", handleMouseMove, { passive: true });
@@ -381,6 +398,7 @@ export const NetworkBackground: React.FC = () => {
           isNeuronCore,
         });
       }
+      wake();
     }
 
     resize();
@@ -401,10 +419,15 @@ export const NetworkBackground: React.FC = () => {
       animationId = 0;
       if (!isVisible || !ctx) return;
 
+      if (!prefersReducedMotion) {
+        animationId = requestAnimationFrame(render);
+        // Idle for 1.5s: drop to ~30fps to save CPU/battery.
+        if (now - lastInteraction > 1500 && now - lastDraw < 32) return;
+      }
+      lastDraw = now;
+
       const delta = Math.min((now - lastTime) / 1000, 0.1);
       lastTime = now;
-
-      animationId = requestAnimationFrame(render);
 
       // Direct sampling of window.scrollY each frame
       const currentScrollY = window.scrollY;
@@ -417,8 +440,9 @@ export const NetworkBackground: React.FC = () => {
       prevScrollCurrent = scrollCurrent;
 
       // Smooth mouse parallax
-      mouse.currentX += (mouse.targetX - mouse.currentX) * 0.05;
-      mouse.currentY += (mouse.targetY - mouse.currentY) * 0.05;
+      const mouseLerp = prefersReducedMotion ? 1 : 0.05;
+      mouse.currentX += (mouse.targetX - mouse.currentX) * mouseLerp;
+      mouse.currentY += (mouse.targetY - mouse.currentY) * mouseLerp;
 
       ctx.clearRect(0, 0, width, height);
 
@@ -431,16 +455,16 @@ export const NetworkBackground: React.FC = () => {
       ctx.lineWidth = 1;
       ctx.strokeStyle = "rgba(56, 189, 248, 0.045)";
       const crossSize = 3;
+      ctx.beginPath(); // one path for all crosses: a single stroke() instead of ~500
       for (let x = gridSize; x < width; x += gridSize) {
         for (let y = gridSize - gridOffsetY; y < height; y += gridSize) {
-          ctx.beginPath();
           ctx.moveTo(x - crossSize, y);
           ctx.lineTo(x + crossSize, y);
           ctx.moveTo(x, y - crossSize);
           ctx.lineTo(x, y + crossSize);
-          ctx.stroke();
         }
       }
+      ctx.stroke();
 
       // ========================================================
       // 2. NEURAL NETWORK ANIMATION (Synaptic Graph & Parallax)
@@ -1008,6 +1032,7 @@ export const NetworkBackground: React.FC = () => {
             activeTelemetryRef.current = null;
             setActiveTelemetry(null);
             dismissTimeoutRef.current = null;
+            schedule(); // clear the hover beam even when no frame is pending (reduced motion)
           }, 200);
         }
       }
@@ -1086,7 +1111,7 @@ export const NetworkBackground: React.FC = () => {
       isVisible = !document.hidden;
       if (isVisible && !animationId) {
         lastTime = performance.now();
-        animationId = requestAnimationFrame(render);
+        schedule();
       } else if (!isVisible && animationId) {
         cancelAnimationFrame(animationId);
         animationId = 0;
@@ -1094,7 +1119,7 @@ export const NetworkBackground: React.FC = () => {
     }
 
     document.addEventListener("visibilitychange", onVisibilityChange);
-    animationId = requestAnimationFrame(render);
+    schedule();
 
     return () => {
       cancelAnimationFrame(animationId);

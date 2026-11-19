@@ -7,7 +7,8 @@
     "dev": "astro dev",
     "build": "node scripts/prepare-assets.mjs && astro build",
     "preview": "astro preview",
-    "check": "astro check"
+    "check": "astro check",
+    "og": "node scripts/make-og.cjs"
   },
   "dependencies": {
     "@astrojs/react": "^4.4.2",

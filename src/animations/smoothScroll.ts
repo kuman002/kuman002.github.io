@@ -2,6 +2,7 @@ import Lenis from "lenis";
 
 export function initSmoothScroll() {
   if (typeof window === "undefined") return;
+  document.documentElement.setAttribute("data-revealed", ""); // cancels the inline 3s fallback in BaseLayout
 
   const prefersReduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
   if (prefersReduced) {
@@ -52,7 +53,8 @@ export function initSmoothScroll() {
   });
 
   // 4. Smooth Anchor Click Handlers via Lenis
-  document.querySelectorAll<HTMLAnchorElement>('a[href^="#"]').forEach((anchor) => {
+  // Skip link keeps native behaviour so keyboard focus actually moves into <main>.
+  document.querySelectorAll<HTMLAnchorElement>('a[href^="#"]:not(.skip-link)').forEach((anchor) => {
     anchor.addEventListener("click", (e) => {
       const targetId = anchor.getAttribute("href");
       if (targetId && targetId.length > 1) {

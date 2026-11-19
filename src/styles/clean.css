@@ -14,7 +14,7 @@
   
   --text-main: #f8fafc;
   --text-muted: #94a3b8;
-  --text-dim: #64748b;
+  --text-dim: #8191a8; /* ≥4.5:1 (WCAG AA) on --bg and card backgrounds */
   
   --accent: #38bdf8;
   --accent-hover: #7dd3fc;
@@ -39,6 +39,28 @@
   margin: 0;
   padding: 0;
 }
+
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+}
+
+main:focus { outline: none; }
+
+.skip-link {
+  position: fixed;
+  top: 0.75rem;
+  left: 0.75rem;
+  z-index: 10000;
+  padding: 0.6rem 1rem;
+  background: var(--accent);
+  color: var(--bg);
+  font-weight: 600;
+  border-radius: var(--radius-sm);
+  transform: translateY(-200%);
+}
+
+.skip-link:focus { transform: none; }
 
 html {
   scroll-behavior: smooth;
@@ -220,6 +242,17 @@ img {
   letter-spacing: -0.04em;
   color: var(--text-main);
   margin-bottom: 1rem;
+}
+
+/* Name inside the H1 for name searches, styled as a small label above the tagline */
+.hero-name {
+  display: block;
+  font-family: var(--font-mono);
+  font-size: clamp(0.95rem, 1.6vw, 1.1rem);
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  color: var(--accent);
+  margin-bottom: 0.75rem;
 }
 
 .hero-subtitle {
@@ -681,7 +714,7 @@ img {
   padding: 1.5rem;
 }
 
-.about-fact-card h4 {
+.about-fact-card h3 {
   font-family: var(--font-display);
   font-size: 1rem;
   color: var(--text-main);
@@ -829,15 +862,15 @@ img {
   border-radius: 2px;
 }
 
-/* Scroll-triggered reveal */
-.reveal-item {
+/* Scroll-triggered reveal: hidden only when JS runs (html.js), so content shows without JS */
+.js .reveal-item {
   opacity: 0;
   transform: translateY(24px);
   transition: opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1), transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
   will-change: opacity, transform;
 }
 
-.reveal-item.is-revealed {
+.js .reveal-item.is-revealed {
   opacity: 1;
   transform: translateY(0);
 }

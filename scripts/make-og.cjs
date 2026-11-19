@@ -1,5 +1,5 @@
-// Renders public/og.png (1200x630 link-preview card) and public/apple-touch-icon.png (180x180).
-// Run `npm run og` after changing your name, title, stack or portrait, then commit both PNGs.
+// Renders public/og.png (1200x630 link-preview card), public/apple-touch-icon.png (180x180) and public/favicon-96.png.
+// Run `npm run og` after changing your name, title, stack or portrait, then commit the PNGs.
 // Not part of `npm run build` on purpose: output depends on locally installed fonts (Segoe UI / Arial).
 const path = require("path");
 const root = path.join(__dirname, "..");
@@ -38,5 +38,7 @@ const mask = Buffer.from(`<svg width="${portraitSize}" height="${portraitSize}">
     <text x="90" y="128" text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-weight="700" font-size="120" fill="${accent}">K</text>
   </svg>`;
   await sharp(Buffer.from(icon)).png().toFile(path.join(root, "public", "apple-touch-icon.png"));
+  // Google Search shows a favicon only from a crawlable file sized in multiples of 48px.
+  await sharp(Buffer.from(icon)).resize(96, 96).png().toFile(path.join(root, "public", "favicon-96.png"));
   console.log("ok");
 })();

@@ -1,7 +1,7 @@
 import { copyFileSync, existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
 
 mkdirSync("public", { recursive: true });
-for (const file of ["Kumaresan K.jpg", "Kumaresan.pdf", "CNAME", "robots.txt"]) {
+for (const file of ["Kumaresan K.jpg", "Kumaresan.pdf", "CNAME", "robots.txt", "favicon.ico", "favicon.svg"]) {
   if (existsSync(file)) copyFileSync(file, `public/${file}`);
 }
 

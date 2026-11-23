@@ -8,6 +8,7 @@
     "build": "node scripts/prepare-assets.mjs && astro build",
     "preview": "astro preview",
     "check": "astro check",
+    "favicons": "node scripts/generate-favicons.cjs",
     "og": "node scripts/make-og.cjs"
   },
   "dependencies": {

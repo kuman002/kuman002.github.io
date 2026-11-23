@@ -1,9 +1,10 @@
-// Renders public/og.png (1200x630 link-preview card), public/apple-touch-icon.png (180x180) and public/favicon-96.png.
-// Run `npm run og` after changing your name, title, stack or portrait, then commit the PNGs.
+// Renders public/og.png (1200x630 link-preview card) and runs favicon generator.
+// Run `npm run og` after changing your name, title, stack or portrait, then commit the assets.
 // Not part of `npm run build` on purpose: output depends on locally installed fonts (Segoe UI / Arial).
 const path = require("path");
+const { execFileSync } = require("child_process");
 const root = path.join(__dirname, "..");
-const sharp = require("sharp"); // shortcut: comes in via astro's dependencies; add it to devDependencies if astro ever drops it
+const sharp = require("sharp");
 
 const bg = "#090d14", accent = "#38bdf8", main = "#f8fafc", muted = "#94a3b8";
 
@@ -33,12 +34,7 @@ const mask = Buffer.from(`<svg width="${portraitSize}" height="${portraitSize}">
     .composite([{ input: portrait, left: 1200 - 72 - portraitSize, top: 165 }])
     .png({ compressionLevel: 9 }).toFile(path.join(root, "public", "og.png"));
 
-  const icon = `<svg xmlns="http://www.w3.org/2000/svg" width="180" height="180">
-    <rect width="180" height="180" fill="${bg}"/>
-    <text x="90" y="128" text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-weight="700" font-size="120" fill="${accent}">K</text>
-  </svg>`;
-  await sharp(Buffer.from(icon)).png().toFile(path.join(root, "public", "apple-touch-icon.png"));
-  // Google Search shows a favicon only from a crawlable file sized in multiples of 48px.
-  await sharp(Buffer.from(icon)).resize(96, 96).png().toFile(path.join(root, "public", "favicon-96.png"));
+  const { buildFavicons } = require("./generate-favicons.cjs");
+  await buildFavicons();
   console.log("ok");
 })();

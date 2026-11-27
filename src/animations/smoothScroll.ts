@@ -4,6 +4,44 @@ export function initSmoothScroll() {
   if (typeof window === "undefined") return;
   document.documentElement.setAttribute("data-revealed", ""); // cancels the inline 3s fallback in BaseLayout
 
+  // 0. Mobile navigation toggle (works with or without Lenis / reduced motion)
+  const navToggle = document.querySelector<HTMLButtonElement>(".nav-toggle");
+  const navLinks = document.getElementById("primary-nav");
+  if (navToggle && navLinks) {
+    const setOpen = (open: boolean) => {
+      navLinks.classList.toggle("is-open", open);
+      navToggle.setAttribute("aria-expanded", String(open));
+    };
+    navToggle.addEventListener("click", () => {
+      setOpen(!navLinks.classList.contains("is-open"));
+    });
+    navLinks.querySelectorAll("a").forEach((link) => {
+      link.addEventListener("click", () => setOpen(false));
+    });
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "Escape" && navLinks.classList.contains("is-open")) {
+        const hadFocusInside = navLinks.contains(document.activeElement);
+        setOpen(false);
+        if (hadFocusInside) navToggle.focus();
+      }
+    });
+    document.addEventListener("click", (e) => {
+      if (
+        navLinks.classList.contains("is-open") &&
+        e.target instanceof Node &&
+        !navLinks.contains(e.target) &&
+        !navToggle.contains(e.target)
+      ) {
+        setOpen(false);
+      }
+    });
+    window.matchMedia("(min-width: 641px)").addEventListener("change", (e) => {
+      if (e.matches && navLinks.classList.contains("is-open")) {
+        setOpen(false);
+      }
+    });
+  }
+
   const prefersReduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
   if (prefersReduced) {
     document.querySelectorAll(".reveal-item").forEach((el) => {
@@ -45,7 +83,7 @@ export function initSmoothScroll() {
         }
       });
     },
-    { threshold: 0.1, rootMargin: "0px 0px -40px 0px" }
+    { threshold: 0.1, rootMargin: "0px 0px -40px 0px" },
   );
 
   document.querySelectorAll(".reveal-item").forEach((el) => {
@@ -67,29 +105,36 @@ export function initSmoothScroll() {
     });
   });
 
-  // 5. Active Nav Highlight on Scroll
+  // 5. Active Nav Highlight on Scroll (rAF-throttled)
   const sections = document.querySelectorAll<HTMLElement>("section[id]");
-  const navLinks = document.querySelectorAll<HTMLAnchorElement>(".nav-links a");
+  const navAnchors = document.querySelectorAll<HTMLAnchorElement>(".nav-links a");
 
+  const updateActiveNav = () => {
+    const scrollY = window.scrollY;
+    sections.forEach((current) => {
+      const sectionHeight = current.offsetHeight;
+      const sectionTop = current.offsetTop - 140;
+      const sectionId = current.getAttribute("id");
+
+      if (scrollY > sectionTop && scrollY <= sectionTop + sectionHeight) {
+        navAnchors.forEach((link) => {
+          link.classList.toggle("active", link.getAttribute("href") === `#${sectionId}`);
+        });
+      }
+    });
+  };
+
+  let navTicking = false;
   window.addEventListener(
     "scroll",
     () => {
-      const scrollY = window.scrollY;
-      sections.forEach((current) => {
-        const sectionHeight = current.offsetHeight;
-        const sectionTop = current.offsetTop - 140;
-        const sectionId = current.getAttribute("id");
-
-        if (scrollY > sectionTop && scrollY <= sectionTop + sectionHeight) {
-          navLinks.forEach((link) => {
-            link.classList.remove("active");
-            if (link.getAttribute("href") === `#${sectionId}`) {
-              link.classList.add("active");
-            }
-          });
-        }
+      if (navTicking) return;
+      navTicking = true;
+      requestAnimationFrame(() => {
+        updateActiveNav();
+        navTicking = false;
       });
     },
-    { passive: true }
+    { passive: true },
   );
 }

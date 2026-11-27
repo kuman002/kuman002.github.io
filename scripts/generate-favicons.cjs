@@ -42,7 +42,7 @@ async function buildFavicons() {
     { name: "favicon-48x48.png", size: 48 }, // Recommended by Googlebot-Favicon
     { name: "favicon-96.png", size: 96 },
     { name: "web-app-manifest-192x192.png", size: 192 },
-    { name: "web-app-manifest-512x512.png", size: 512 }
+    { name: "web-app-manifest-512x512.png", size: 512 },
   ];
 
   for (const { name, size } of pngSizes) {
@@ -56,10 +56,7 @@ async function buildFavicons() {
   const icoSizes = [16, 32, 48];
   const icoPngBuffers = [];
   for (const s of icoSizes) {
-    const buf = await sharp(Buffer.from(squircleSvg))
-      .resize(s, s)
-      .png()
-      .toBuffer();
+    const buf = await sharp(Buffer.from(squircleSvg)).resize(s, s).png().toBuffer();
     icoPngBuffers.push({ size: s, buf });
   }
 
@@ -85,7 +82,7 @@ async function buildFavicons() {
     offset += buf.length;
   }
 
-  const icoBuffer = Buffer.concat([header, ...dirEntries, ...icoPngBuffers.map(p => p.buf)]);
+  const icoBuffer = Buffer.concat([header, ...dirEntries, ...icoPngBuffers.map((p) => p.buf)]);
   fs.writeFileSync(path.join(publicDir, "favicon.ico"), icoBuffer);
   fs.writeFileSync(path.join(root, "favicon.ico"), icoBuffer);
 
@@ -98,19 +95,19 @@ async function buildFavicons() {
         src: "/web-app-manifest-192x192.png",
         sizes: "192x192",
         type: "image/png",
-        purpose: "any maskable"
+        purpose: "any maskable",
       },
       {
         src: "/web-app-manifest-512x512.png",
         sizes: "512x512",
         type: "image/png",
-        purpose: "any maskable"
-      }
+        purpose: "any maskable",
+      },
     ],
     theme_color: bg,
     background_color: bg,
     display: "standalone",
-    start_url: "/"
+    start_url: "/",
   };
   fs.writeFileSync(path.join(publicDir, "site.webmanifest"), JSON.stringify(manifest, null, 2));
 
@@ -120,7 +117,7 @@ async function buildFavicons() {
 module.exports = { buildFavicons };
 
 if (require.main === module) {
-  buildFavicons().catch(err => {
+  buildFavicons().catch((err) => {
     console.error(err);
     process.exit(1);
   });

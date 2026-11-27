@@ -1,7 +1,5 @@
 import { defineConfig } from "astro/config";
 
-import react from "@astrojs/react";
-
 export default defineConfig({
   site: "https://kumaresan.is-a.dev",
   output: "static",
@@ -10,9 +8,7 @@ export default defineConfig({
 
   vite: {
     build: {
-      chunkSizeWarningLimit: 1200
-    }
+      chunkSizeWarningLimit: 1200,
+    },
   },
-
-  integrations: [react()]
 });

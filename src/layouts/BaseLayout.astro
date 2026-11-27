@@ -1,11 +1,14 @@
 ---
+import "@fontsource-variable/inter";
+import "@fontsource-variable/space-grotesk";
+import "@fontsource/dm-mono/400.css";
+import "@fontsource/dm-mono/500.css";
 import "../styles/clean.css";
-import NetworkBackground from "../components/NetworkBackground.tsx";
 
 const {
   title = "Kumaresan Kanthasamy — Backend & Cloud Systems Engineer",
   description = "Backend and cloud engineer building serverless systems, zero-trust databases and microservices with TypeScript, Node.js, PostgreSQL and AWS.",
-  noindex = false
+  noindex = false,
 } = Astro.props;
 
 const person = {
@@ -15,9 +18,10 @@ const person = {
   jobTitle: "Backend & Cloud Systems Engineer",
   url: "https://kumaresan.is-a.dev/",
   image: "https://kumaresan.is-a.dev/Kumaresan%20K.jpg",
-  sameAs: ["https://github.com/kuman002", "https://www.linkedin.com/in/kumaresan-k-4289452b4"]
+  sameAs: ["https://github.com/kuman002", "https://www.linkedin.com/in/kumaresan-k-4289452b4"],
 };
 ---
+
 <!doctype html>
 <html lang="en">
   <head>
@@ -29,13 +33,16 @@ const person = {
       root.classList.add("js");
       setTimeout(() => root.hasAttribute("data-revealed") || root.classList.remove("js"), 3000);
     </script>
-    {noindex ? <meta name="robots" content="noindex" /> : <link rel="canonical" href="https://kumaresan.is-a.dev/" />}
+    {
+      noindex ? (
+        <meta name="robots" content="noindex" />
+      ) : (
+        <link rel="canonical" href="https://kumaresan.is-a.dev/" />
+      )
+    }
     <meta name="theme-color" content="#090d14" />
     <meta name="description" content={description} />
     <meta name="author" content="Kumaresan Kanthasamy" />
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500;600&family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet" />
     <!-- Favicon & Icons for all browsers and search engines -->
     <link rel="icon" href="/favicon.ico" sizes="32x32" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
@@ -53,11 +60,23 @@ const person = {
     <meta property="og:image" content="https://kumaresan.is-a.dev/og.png" />
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="630" />
-    <meta property="og:image:alt" content="Kumaresan Kanthasamy — Backend & Cloud Systems Engineer" />
+    <meta
+      property="og:image:alt"
+      content="Kumaresan Kanthasamy — Backend & Cloud Systems Engineer"
+    />
     <meta name="twitter:card" content="summary_large_image" />
     <script type="application/ld+json" set:html={JSON.stringify(person)} />
     <!-- Site name shown in Google results instead of "is-a.dev" -->
-    <script type="application/ld+json" set:html={JSON.stringify({ "@context": "https://schema.org", "@type": "WebSite", name: "Kumaresan Kanthasamy", alternateName: ["Kumaresan K"], url: "https://kumaresan.is-a.dev/" })} />
+    <script
+      type="application/ld+json"
+      set:html={JSON.stringify({
+        "@context": "https://schema.org",
+        "@type": "WebSite",
+        name: "Kumaresan Kanthasamy",
+        alternateName: ["Kumaresan K"],
+        url: "https://kumaresan.is-a.dev/",
+      })}
+    />
     <title>{title}</title>
   </head>
   <body>
@@ -65,14 +84,17 @@ const person = {
     <!-- Top Scroll Progress Indicator -->
     <div class="scroll-progress-bar" aria-hidden="true"></div>
 
-    <!-- Software Engineer Distributed Network & Data Flow Background Animation -->
-    <NetworkBackground client:idle />
-
     <slot />
 
     <script>
       import { initSmoothScroll } from "../animations/smoothScroll";
+      import { initNetworkBackground } from "../components/network";
       initSmoothScroll();
+      if (typeof window.requestIdleCallback === "function") {
+        window.requestIdleCallback(() => initNetworkBackground(), { timeout: 1500 });
+      } else {
+        window.setTimeout(initNetworkBackground, 1);
+      }
     </script>
   </body>
 </html>

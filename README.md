@@ -1,6 +1,6 @@
 # Kumaresan — Portfolio
 
-A static portfolio built with Astro, TypeScript, Lenis smooth scrolling, and a React canvas background.
+A static portfolio built with Astro, TypeScript, Lenis smooth scrolling, and a vanilla canvas background (no client framework runtime).
 
 ## Local development
 
@@ -16,7 +16,29 @@ npm run build
 npm run preview
 ```
 
-The build script copies the existing portrait, résumé, CNAME, robots.txt, and sitemap into Astro's public directory before generating the static site. GitHub Actions deploys the `dist/` output to GitHub Pages.
+The build script copies the existing portrait (`.jpg` + optimized `.webp`), résumé, CNAME, robots.txt, and sitemap into Astro's public directory before generating the static site. GitHub Actions deploys the `dist/` output to GitHub Pages.
+
+## Quality checks
+
+```bash
+npm run lint          # ESLint
+npm run format:check  # Prettier
+npm run check         # astro check (types + Astro diagnostics)
+```
+
+CI runs all three plus the build on every push and pull request.
+
+## Fonts
+
+Inter, Space Grotesk, and DM Mono are self-hosted via `@fontsource` (bundled by Vite) instead of a render-blocking Google Fonts request.
+
+## Portrait image
+
+`Kumaresan K.webp` is the optimized (WebP) portrait served on the page. After replacing `Kumaresan K.jpg`, regenerate it and commit the result:
+
+```bash
+npm run portrait
+```
 
 ## Link-preview image
 
@@ -30,5 +52,5 @@ npm run og
 
 - Lenis for smooth scrolling, the reading-progress bar, and anchor navigation.
 - IntersectionObserver for scroll reveals.
-- `NetworkBackground.tsx` draws the animated canvas background. It hydrates on idle, drops to ~30fps after 1.5s without input, and pauses in hidden tabs.
+- `src/components/network/` draws the animated canvas background in vanilla TS (canvas + telemetry HUD, no React). It hydrates on idle, drops to ~30fps after 1.5s without input, and pauses in hidden tabs.
 - With reduced motion enabled, the reveal animations are skipped and the canvas redraws only on scroll, pointer or resize.
